@@ -288,6 +288,7 @@ function loadreports( clsname ) {
     var html = "<h2>Please select the type of report you would like to see</h2>"
     html+= "<select id=\"rtype\">"
     html+= "<option value=\"r_attendance\">Attendance</option>"
+    html+= "<option value=\"r_all_attendance\">Attendance: All Classes</option>"
     html+= "<option value=\"r_ogrades\">Overall Grades</option>"
     html+= "</select><br>"
     html+= "<button onclick=\"viewReport()\">Get Report</button>"
@@ -300,14 +301,24 @@ function loadreports( clsname ) {
 function viewReport() {
 
     var rtype = $("#rtype").val();
-    var html = "<button onclick=\"loadreports()\">Back to Reports</button><br>";
-    
+    var html = "<button onclick=\"loadreports()\">Back to Reports</button><br>";    
     $("#report").remove();
     $("#student_table").html(html);
 
     if ( rtype == "r_attendance" ) {
 	var day = new Date();
-	var dateString = (day.getMonth() + 1) + "-" + day.getDate() + "-" + day.getFullYear();
+	var dateString = (day.getMonth() + 1) + "-" + day.getDate() + "-" + day.getFullYear();	
+	generateAttendanceReport( dateString );
+    }
+    else if ( rtype == "r_all_attendance" ) {
+	var day = new Date();
+	var dateString = (day.getMonth() + 1) + "-" + day.getDate() + "-" + day.getFullYear();	
+
+	$.post("/loadselect", {},
+	       function( data, status ) {
+		   var c = eval("(" + data + ")" );
+		   console.log(c);
+	       });
 	generateAttendanceReport( dateString );
     }
     else if ( rtype == "r_ogrades") {
@@ -495,14 +506,18 @@ function getGradeAverage( grades ) {
     return avg * 100;
 }
 
-function generateAttendanceReport( dateString ) {
+function generateAttendanceReport( dateString, clsname ) {
     
     if ( !dateString ) {
 	dateString = $("#datepick").val();
 	$("#report").remove();
     }
-	
-    $.post("/loadclass", { classname : currentClass }, 
+    
+    if ( !clsname )
+	cn = currentClass;
+    else
+	cn = clsname
+    $.post("/loadclass", { classname : cn }, 
 	   function( data, status ) {
 	       var c = eval("(" + data + ")" );
 	       if ( !c )

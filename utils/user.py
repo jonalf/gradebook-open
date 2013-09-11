@@ -3,7 +3,8 @@ from flask import Flask, session, url_for, redirect, render_template
 import xmlrpclib
 import md5
 
-passdic = { 'tester' : '\x1e\xa5RdH\x8a\xa8\x9e\x8f\x9c\xb1>\xcaZy.' }
+passdic = { 'jdyrlandweaver' : '\x1e\xa5RdH\x8a\xa8\x9e\x8f\x9c\xb1>\xcaZy.',
+            'tester' : '\x1e\xa5RdH\x8a\xa8\x9e\x8f\x9c\xb1>\xcaZy.' }
 
 def authenticate(user, passw):
     return user in passdic.keys() and md5.new(passw).digest() == passdic[user]
@@ -19,4 +20,3 @@ def requireauth(page):
                 return f(*args, **kwargs)
         return wrapper
     return decorator
-
