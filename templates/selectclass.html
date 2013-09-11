@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %} Select Class {% endblock %}
+
+{% block content %}
+
+Choose one of the following Classes:<br>
+
+<form method="POST" action="/classview">
+
+<select name="classname" id="selection">
+</select>
+
+<input type="submit" name="submit">
+</form>
+
+{% endblock %}
+
+{% block footer %}
+<script src="/static/scripts.js"></script>
+<script>$(document).load(loadselect())</script>
+{% endblock %}

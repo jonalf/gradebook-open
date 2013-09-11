@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %} Class View{% endblock %}
+
+{% block header %}
+  <ul class="navbar">
+    <li class="navbar"><a class="navlink" style="text-align: left">Login</a></li>
+    <li class="navbar"><a class="navlink" href="/logout">Logout</a></li>
+    <li class="navbar"><a class="navlink" href="/selectclass">Select</a></li>
+    <li class="navbar"><a class="navlink" onclick="loadclass( '{{ clsname }}', 0 )" >Attendance</a></li> 
+    <li class="navbar"><a class="navlink" onclick="loadclass( '{{ clsname }}', 1 )">Arrange</a></li>
+    <li class="navbar"><a class="navlink" onclick="loadclass( '{{ clsname }}', 2 )">Student</a></li>
+    <li class="navbar"><a class="navlink" onclick="loadclass( '{{ clsname }}', 3 )">Assignment</a></li>
+    <li class="navbar"><a class="navlink" onclick="loadclass( '{{ clsname }}', 4)">Grades</a></li>
+    <li class="navbar"><a class="navlink" onclick="loadreports( '{{ clsname }}')">Reports</a></li>
+    <li class="navbar"><a class="navlink" onclick="loadbackups()">Backups</a></li>
+  </ul>
+{% endblock %}
+
+{% block content %}
+<h1 align="center"> {{ clsname }} </h1>
+
+<table id="student_table">
+</table>
+
+{% endblock %}
+
+{% block footer %}
+<div id="overlay">
+  <div id="modalbox">
+    Here should be things
+  </div>
+</div>
+
+<script src="/static/scripts.js"></script>
+<script>$(document).ready(function() {
+  loadclass( "{{ clsname }}", 0) });
+</script>
+{% endblock %}

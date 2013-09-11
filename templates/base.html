@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+{% block head %}
+
+<link href="/static/style.css" type="text/css" rel="stylesheet" />
+<link href="/static/jquery.datepick.css" type="text/css" rel="stylesheet" />
+<link href="/static/jquery-ui-1.10.3.custom.css" type="text/css" rel="stylesheet" />
+<script src="/static/jquery-1.8.3.min.js"></script>
+<script src="/static/jquery.datepick.min.js"></script>
+<script src="/static/jquery-ui-1.10.3.custom.min.js"></script>
+
+<title>{% block title %} default title  {% endblock %} </title>
+
+{% endblock %}
+</head>
+
+<body>
+
+<div id="header">
+{% block header %}
+  <ul class="navbar">
+    <li class="navbar"><a class="navlink" style="text-align: left">Login</a></li>
+    <li class="navbar"><a class="navlink" href="/logout">Logout</a></li>
+    <li class="navbar"><a class="navlink" href="/selectclass">Select</a></li>
+  </ul>
+{% endblock %}
+</div>
+
+
+<div id="content">
+{% block content %}
+This is the base html content block
+{% endblock%}
+</div>
+
+{% block footer %}
+This is for end of body stuff i.e. scripts
+{% endblock %}
+
+</body>
+</html>
