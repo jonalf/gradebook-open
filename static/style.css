@@ -2,105 +2,113 @@ body {
     background-color: lightsteelblue;
     padding: 0px;
     margin: 0px;
-    font-family: sans-serif;
 }
 
-.cornsilk {
-    background-color: cornsilk;
-}
-
-.redalert {
-    color: red;
-    border: 4px solid red;
-    font-weight: bold;
-} 
-
-.orangealert {
-    color: orange;
-    border: 4px solid orange;
-    font-weight: bold;
-} 
-
-.greenalert {
-    color: green;
-    border: 4px solid green;
-    font-weight: bold;
-} 
-
+/*
 table {
     border-spacing: 10px;
     float: left;
     margin-right: 20px;
     margin-bottom: 20px;
 }
+*/
 
-table.report {
-    border-style: solid;
-    border-color: black;
-    border-width: 1px;
-    border-collapse: collapse;
-}
-
-tr.report1 {
-    border-style: solid;
-    border-color: black;
-    border-width: 1px;
-    background-color: cornsilk;
-}
-
-tr.report2 {
-    border-style: solid;
-    border-color: black;
-    border-width: 1px;
-    background-color: white;
-}
-
-th.report {
-    padding-left:10px;
-    padding-right:10px;
-}
-td.report {
-    padding-left:10px;
-    padding-right:10px;
+#student_table {
+    table-layout: fixed;
+    word-wrap: break-word;
+    width: 100%;
+    border-collapse: separate;
 }
 
 .student {
     background-color: cornsilk;
-    height: 100px;
-    width: 150px;
+    height: 80px;
+    width: auto;
     text-align: center;
-    display: table-cell;
     vertical-align: middle;
+    border: 4px solid lightsteelblue;
 }
 
-ul.navbar {
-    float: left;
-    list-style-type: none;
-    height: 100%;
-    width: 100%;
-    padding: 2px;
-    margin: 0px;
+/* BOOTSTRAP MODIFICATIONS */
+.btn-stack {
+    margin-bottom: 5px;
+    width:100%;
 }
 
-li.navbar {
-    display: inline;
-    font-size: 1.1em;
+.btn-info {
+    background-color: #C57777;
+    border-color: #C57777;
 }
 
-a.navlink {
-    float:left;
-    width: 100px;
-    height: 95%;
-    border-right: 1px solid white;
-    margin: 1px;
-    text-align: center;
+.btn-info:hover, .btn-info:focus, .btn-info:active, .btn-info.active, .open .dropdown-toggle.btn-info {
+    background-color: #8A5353;
+    border-color: #8A5353;
 }
 
-#header {
+hr {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.container .jumbotron {
+    background-color: lightsteelblue;
+    border: 4px solid darkcyan;
+    padding: 0px;
+}
+
+.navbar {
     background-color: darkcyan;
+    border-color: darkcyan;
     color: white;
-    height: 30px;
-    width: 100%;
+}
+
+.navbar-default
+.navbar-brand {
+    color: white;
+}
+
+.navbar .nav > li > a {
+    color: white;
+}
+
+.navbar .nav > li > a:hover {
+    color: cornsilk;
+    background-color: cadetblue;
+}
+
+.navbar .nav > .active > a {
+    background-color: cadetblue;
+    color: white;
+}
+
+.navbar-default
+.navbar-nav>.dropdown>a .caret {
+    border-bottom-color: #FFFFFF;
+    border-top-color: #FFFFFF;
+}
+
+.navbar-default
+.navbar-nav>.dropdown>a:hover .caret {
+    border-bottom-color: cornsilk;
+    border-top-color: cornsilk;
+}
+
+.navbar-default 
+.navbar-nav .open .dropdown-menu>li>a {
+    color:white;
+}
+
+.navbar-default 
+.navbar-nav .open .dropdown-menu>li>a:hover {
+    color: black;
+}
+
+ul.dropdown-menu {
+    background-color: cadetblue;
+}
+
+li.dropdown-active {
+    background-color: cadetblue;
 }
 
 
@@ -142,8 +150,8 @@ a.navlink {
 }
 
 .attendancebox {
-    width: 800px;
-    height: 500px;
+    width: 940px;
+    height: 450px;
 }
 
 .workbox {
@@ -155,3 +163,88 @@ a.navlink {
     width: 400px;
     height: auto;
 }
+table.report {
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+    border-collapse: collapse;
+}
+
+tr.report1 {
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+    background-color: cornsilk;
+}
+
+tr.report2 {
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+    background-color: white;
+}
+
+th.report {
+    padding-left:10px;
+    padding-right:10px;
+}
+
+td.report {
+    padding-left:10px;
+    padding-right:10px;
+}
+
+.votebutton {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right:10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 125%;
+    background-color: cornsilk;
+    border: 1px;
+    border-style: solid;
+    color: grey;
+}
+
+.upcount {
+    margin-right: 10px;
+    float: right;
+    color: green;
+}
+
+.downcount {
+    margin-left: 10px;
+    float: left;
+    color: red;
+}
+
+.cornsilk {
+    background-color: cornsilk;
+}
+
+.redalert {
+    color: red;
+    border: 4px solid red;
+    font-weight: bold;
+} 
+
+.orangealert {
+    color: orange;
+    border: 4px solid orange;
+    font-weight: bold;
+} 
+
+.greenalert {
+    color: green;
+    border: 4px solid green;
+    font-weight: bold;
+} 
+
+.bluealert {
+    color: blue;
+    border: 4px solid blue;
+    font-weight: bold;
+} 
+

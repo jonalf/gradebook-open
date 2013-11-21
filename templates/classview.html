@@ -2,37 +2,73 @@
 {% block title %} Class View{% endblock %}
 
 {% block header %}
-  <ul class="navbar">
-    <li class="navbar"><a class="navlink" style="text-align: left">Login</a></li>
-    <li class="navbar"><a class="navlink" href="/logout">Logout</a></li>
-    <li class="navbar"><a class="navlink" href="/selectclass">Select</a></li>
-    <li class="navbar"><a class="navlink" onclick="loadclass( '{{ clsname }}', 0 )" >Attendance</a></li> 
-    <li class="navbar"><a class="navlink" onclick="loadclass( '{{ clsname }}', 1 )">Arrange</a></li>
-    <li class="navbar"><a class="navlink" onclick="loadclass( '{{ clsname }}', 2 )">Student</a></li>
-    <li class="navbar"><a class="navlink" onclick="loadclass( '{{ clsname }}', 3 )">Assignment</a></li>
-    <li class="navbar"><a class="navlink" onclick="loadclass( '{{ clsname }}', 4)">Grades</a></li>
-    <li class="navbar"><a class="navlink" onclick="loadreports( '{{ clsname }}')">Reports</a></li>
-    <li class="navbar"><a class="navlink" onclick="loadbackups()">Backups</a></li>
-  </ul>
+    <li><a href="/logout">Logout</a></li>
+<!--    <li><a href="/selectclass">Select</a></li> -->
+    <li id="selectdropdown" class="dropdown">
+      <a href = "#" class = "dropdown-toggle" data-toggle="dropdown" id="nav_sel">Select (beta)<b class="caret"></b></a>
+      <ul class="dropdown-menu" id="selectmenu">
+      </ul>
+    </li>
+
+    <li id="classdropdown" class="dropdown">
+      <a href = "#" class = "dropdown-toggle" data-toggle="dropdown" id="nav_class">Classview<b class="caret"></b></a>
+      <ul class="dropdown-menu">
+	<li><a id="nav_att" onclick="loadclass( '{{ clsname }}', '{{ trm }}', 0 )" >Attendance</a></li> 
+	<li><a id="nav_par" onclick="loadclass( '{{ clsname }}', '{{ trm }}', 5 )">Participation</a></li>
+	<li><a id="nav_arr" onclick="loadclass( '{{ clsname }}', '{{ trm }}', 1 )">Arrange</a></li>
+	<li><a id="nav_stu" onclick="loadclass( '{{ clsname }}', '{{ trm }}', 2 )">Student</a></li>
+	<li><a id="nav_ass" onclick="loadclass( '{{ clsname }}', '{{ trm }}', 3 )">Assignment</a></li>
+	<li><a id="nav_gra" onclick="loadclass( '{{ clsname }}', '{{ trm }}', 4)">Grades</a></li>
+	</ul>
+      </li>
+    <li id="reportdropdown" class="dropdown">
+      <a href = "#" class="dropdown-toggle" data-toggle="dropdown" id="nav_report">Reports<b class = "caret"></b></a>
+      <ul class="dropdown-menu">
+	<li><a id="nav_rep" onclick="generateAttendanceReport2(1)">Today's Attendance (all classes)</a></li>
+	<li><a onclick="generateAttendanceTotalReport()">Attendance Totals</a></li>
+	<li><a onclick="generateFullGradesReport()">Grades</a></li>
+      </ul>
+      </li>
+      <li><a id="nav_bac" onclick="loadbackups('{{ trm }}')">Backups</a></li>
 {% endblock %}
 
 {% block content %}
-<h1 align="center"> {{ clsname }} </h1>
+<div class="container">
+  <div class="jumbotron">
+    <center><h3> Current Class: <span id="sname">{{ clsname }}</span></h3>
+      <h4 id="cterm"> Selected Term: <span id="sterm">{{trm}}</span> </h4>
+    </center>
+  </div>
+</div>
 
-<table id="student_table">
-</table>
-
+<div id="content" class="container">
+</div>
 {% endblock %}
 
 {% block footer %}
 <div id="overlay">
   <div id="modalbox">
-    Here should be things
+    Loading data...
+  </div>
+</div>
+
+<div class="modal fade" id="mainmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+	<h4 class="modal-title"></h4>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+	<button type="button" class="btn btn-default" onclick="clearModal()">Close</button>
+      </div>
+    </div>
   </div>
 </div>
 
 <script src="/static/scripts.js"></script>
 <script>$(document).ready(function() {
-  loadclass( "{{ clsname }}", 0) });
+  loadclass( "{{ clsname }}", "{{ trm }}", 0) });
 </script>
 {% endblock %}

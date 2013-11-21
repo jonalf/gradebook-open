@@ -1,21 +1,38 @@
 {% extends "base.html" %}
 {% block title %} Select Class {% endblock %}
 
+{% block header %}
+	  <li><a href="/logout">Logout</a></li>
+	  <li><a href="/selectclass">Select</a></li>
+{% endblock %}
+
 {% block content %}
 
-Choose one of the following Classes:<br>
+<h2>Current Term: {{ trm }} </h2>
+Choose one of the following Current Classes:<br>
+<form method="POST" action="/classview" role="form" class="form-inline">
+  <div class="form-group">
+  <select name="classname" id="selection" class="form-control">
+  </select>
+  <input type="hidden" name="term" value="{{trm}}">
+  <input type="submit" name="submit" value="Select Current Class" class="form-control btn btn-info">
+  </div>
+</form>
 
-<form method="POST" action="/classview">
-
-<select name="classname" id="selection">
-</select>
-
-<input type="submit" name="submit">
+<br>
+<br>Or Choose from an earlier term:<br>
+<form method="POST" action="/classview" role="form" class="form-inline">
+  <div class="form-group">
+    <select name="classname" id="selection2" class="form-control">
+    </select>
+    <input type="hidden" name="term" value="other">
+    <input type="submit" name="submit" value="Select Old Class" class="form-control btn btn-default">
+  </div>
 </form>
 
 {% endblock %}
 
 {% block footer %}
 <script src="/static/scripts.js"></script>
-<script>$(document).load(loadselect())</script>
+<script>$(document).load(loadselect("{{trm}}"))</script>
 {% endblock %}
