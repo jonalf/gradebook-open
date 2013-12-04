@@ -433,6 +433,21 @@ class db:
                                     {'$push':{('students.$.assignments.'+atype):
                                               newassignment(aname, grades[i], maxpoints)}})
 
+    def deleteAssignment(self, csp, term, ids, aname, atype):
+        self.db.classes.update( {'code':csp[0],
+                                 'section':csp[1],
+                                 'period':csp[2],
+                                 'term':term},
+                                {'$pull' : { 'assignments.'+atype : { 'name' : aname }}})
+
+        for i in ids:
+            self.db.classes.update( {'code':csp[0],
+                                     'section':csp[1],
+                                     'period':csp[2],
+                                     'term':term,
+                                     'students.id':i},
+                                    {'$pull':{('students.$.assignments.'+atype): {'name' : aname}}})
+
 
     def changeGrade(self, csp, term, sid, atype, grades):
         self.db.classes.update( {'code':csp[0],

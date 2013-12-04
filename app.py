@@ -485,6 +485,23 @@ def getassignment():
         return json.dumps( assignment )
     except:
         return '{"grades":[]}'
+
+@app.route('/deletegrades', methods=["POST"])
+@requireauth('deletegrades')
+def deletegrades():
+    clsn = request.form["classname"]
+    term = request.form['term']
+    nameParts = clsn.split("-")
+    ids = json.loads(request.form['ids'])
+    mydb = db.db()
+    if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
+        return 'false'
+    print ids
+    mydb.deleteAssignment( (nameParts[0], nameParts[1], nameParts[2] ),
+                           term, ids,
+                           request.form['aname'], request.form['atype']); 
+    return "done"
+
 #=============================================
 
 

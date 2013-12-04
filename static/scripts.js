@@ -181,8 +181,8 @@ function loadclass( clsname, term, mode ) {
 		   html+= '<input class="form-control input-sm" type="text" pattern="[0-9]*" value="Max Points" id="amax">'
 		   html+= '<input type="text" class="form-control input-sm" pattern="[0-9]*" value="Default Points" id="adefault"><br>'
 		   html+= loadAssignmentTypes( Object.keys(c['assignments']), 'radio')
-		   html+= '<button class="btn btn-info btn-block" id="action_buton" onclick="saveGrades()">Save Grades</button></div><hr>'
-		   html+= '<select class="form-control" id="aselection"></select><br><button class="btn btn-info btn-block" id="apick" onclick="changeAssignment()">Change Assignment</button></div>'
+		   html+= '<br><button class="btn btn-info btn-block" id="action_buton" onclick="saveGrades()">Save Grades</button><br><button class="btn btn-warning btn-block" id="adelete" onclick="deleteAssignment()">Delete Assignment</button></div><hr>'
+		   html+= '<select class="form-control" id="aselection"></select><br><button class="btn btn-info btn-block" id="apick" onclick="changeAssignment()">Change Assignment</button><br></div>'
 		   $("#iface").html(html);
 		   $("#cterm").append('<button class="btn btn-warning btn-xs" onclick="loadhelp(3)" id="help_button">?</button>');
 		   $('#nav_class').html('Assignment <b class="caret">')
@@ -1087,9 +1087,6 @@ function newSize() {
 function resize() {
     rows = $("#rows").attr("value");
     cols = $("#cols").attr("value");
-    
-    console.log(rows + ' ' + cols)
-
     sizeChanged = true;
     
     $.post("/loadclass", { classname : currentClass, term:selectedTerm,
@@ -1548,6 +1545,38 @@ function changeAssignment() {
 	   });
 }
 
+function deleteAssignment() {
+    var assignment = $('#aname').val()
+    var atype = $('[type=radio]:checked').val()
+    var html = 'Are you sure you want to remove this assignment? Doing so will delete it from the database. This action is cannot be reversed.'
+    var button = '<button type="button" class="mbutton btn btn-info" onclick="deleteAssignmentConfirm()">Delete Assignment</button>'
+
+    $('.modal-title').html('Remove ' + atype + ': ' + assignment + '?')
+    $('.modal-body').html(html);
+    $('.modal-body').addClass('redalert')
+    $('.modal-footer').append(button)
+    $('#mainmodal').modal('show')    
+}
+
+function deleteAssignmentConfirm() {    
+
+    var ids = []
+    $(".student").each(
+        function() {
+	    if ( parseInt(this.id) >= 1000 ) {
+		ids.push( this.id )
+	    }
+	});
+    $.post("/deletegrades", { classname:currentClass,
+			      term:selectedTerm,
+			      ids:JSON.stringify(ids),
+			      aname:$("#aname").val(),
+			      atype:$("[type=radio]:checked").val() }, 	   
+           function(data, status) {
+               loadclass( currentClass, selectedTerm, M_GRADES);
+           });
+    clearModal()
+}
 //====== END ASSIGNMENT MODE FUNCTIONS ========
 
 
