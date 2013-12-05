@@ -22,7 +22,8 @@ def newclass(code,sect,pd,teacher):
             'tests':[],
             'projects':[],
             'work':[],
-            'weights': { 'work':.2, 'tests':.4, 'projects':.4 }
+            'weights': { 'work':.2, 'tests':.4, 'projects':.4 },
+            'options':[]
             }
     return rec
 

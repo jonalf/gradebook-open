@@ -134,8 +134,6 @@ function loadclass( clsname, term, mode ) {
 	       tmp+= '</div><div class="col-md-2"><div id="iface"></div></div></div>'
 	       $('#content').empty();
 	       $('#content').html( tmp );
-//	       $('#sterm').html( selectedTerm )
-//	       $('#sname').html( currentClass )
 
 	       $("#help_button").remove();
 	       $('.message').remove()
@@ -192,7 +190,7 @@ function loadclass( clsname, term, mode ) {
 		   var html = '<form class="form-horizontal"><div class="col-sm-12">Weights:</div>'
 		   html+= loadAssignmentTypes( Object.keys(c['assignments']), 'weights', c)
 		   html+= '</div></form>'
-		   html+= '<button class="btn btn-info btn-block" onclick="changeWeights()">Change Weights</button></div>'
+		   html+= '<button class="btn btn-info btn-block" onclick="changeWeights()">Change Weights</button><br><button class="btn btn-info btn-block" onclick="gradeOptions()">More Options</button></div>'
 		   $("#iface").html(html);
 		   $("#cterm").append('<button class="btn btn-warning btn-xs" onclick="loadhelp(4)" id="help_button">?</button>');
 		   $('#nav_class').html('Grades <b class="caret">')
@@ -1639,7 +1637,6 @@ function changeWeights() {
 	else
 	    weights[a] = w
     }
-
     
     $.post("/changeweights", {classname:currentClass,
 			      term:selectedTerm,
@@ -1647,5 +1644,16 @@ function changeWeights() {
            function(data, status) {
                showGrades();
            });
+}
+
+function gradeOptions() {
+    var html = 'Drop the lowest test grade by average: '
+    html+= '<button onclick="dropTestByAvg" class="btn btn-default">Select</button><br><br>'
+    html+= 'Drop the lowest test grade by total points: '
+    html+= '<button onclick="dropTestByTotal" class="btn btn-default">Select</button>'
+
+    $('.modal-body').html( html )
+    $('.modal-title').html('Grade Options')
+    $('#mainmodal').modal('show')
 }
 //====== END GRADE MODE FUNCTIONS ============
