@@ -6,7 +6,7 @@ import json
 from socket import gethostname
 from utils import db
 from utils import user
-from utils.user import requireauth
+from utils.user import requireauth, markUsage
 
 if gethostname() == 'nibbler':
     userfile = '/var/www/gradebook/data/gbusers'
@@ -107,6 +107,8 @@ def loadclass():
     mydb = db.db()
     if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
         return 'false'
+    
+    markUsage( session['teacher'] )
     cls = mydb.getClass( (nameParts[0], nameParts[1], nameParts[2] ), term )
     try:
         mydb.resizeClass( (nameParts[0], nameParts[1], nameParts[2] ),

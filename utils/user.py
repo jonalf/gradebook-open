@@ -34,6 +34,29 @@ def requireauth(page):
         return wrapper
     return decorator
 
+def markUsage( user ):
+    f = open('utils/usage', 'r')
+    s = f.read().strip().split('\n');
+    f.close()
+
+    d = {}
+    if s[0] != '':
+        for line in s:
+            l = line.split(':')
+            d[l[0]] = int(l[1])
+            
+    if user in d.keys():
+        d[user] = d[user] + 1
+    else:
+        d[user] = 0
+    s = ''
+    for u in d:
+        s+= u + ':' + str(d[u]) + '\n'
+    
+    f = open('utils/usage', 'w')
+    f.write(s)
+    f.close()
+
 
 def getDBUser(user, userfile=ufile):
     users = getUserList(userfile)
