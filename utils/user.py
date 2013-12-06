@@ -12,8 +12,10 @@ I_PASSWORD = 2
 
 if gethostname() == 'nibbler':
     ufile = '/var/www/gradebook/data/gbusers'
+    usageFile = '/var/www/gradebook/utils/usage'
 else:
     ufile = '../data/gbusers'
+    usageFile = 'usage'
 
 def authenticate(user, passw, userfile=ufile):
     passw = md5.new(passw).digest()
@@ -35,7 +37,7 @@ def requireauth(page):
     return decorator
 
 def markUsage( user ):
-    f = open('utils/usage', 'r')
+    f = open(usageFile, 'r')
     s = f.read().strip().split('\n');
     f.close()
 
@@ -53,7 +55,7 @@ def markUsage( user ):
     for u in d:
         s+= u + ':' + str(d[u]) + '\n'
     
-    f = open('utils/usage', 'w')
+    f = open(usageFile, 'w')
     f.write(s)
     f.close()
 
