@@ -484,6 +484,7 @@ function generateFullGradesReport() {
 	       var html= "<div id=\"report\"><table><tr><td><h2>Class Grades</h2><br>";
 	       var table = "<table class=\"report\"><tr class=\"report1\"><th>Last Name</th><th>First Name</th>"
 
+	       gradeOptions = c['options']
 	       atypes = Object.keys(c['assignments'])
 	       for (var i=0; i < atypes.length; i++)
 		   table+= '<th>' + atypes[i] + '</th>'
@@ -509,7 +510,7 @@ function generateFullGradesReport() {
 		   assignments = s['assignments']		   
 		   var g = 0
 		   for (var at=0; at < atypes.length; at++) {
-		       var a = getGradeAverage(assignments[atypes[at]])
+		       var a = computeGradePart(assignments[atypes[at]], atypes[at])
 		       g+= a * c['weights'][atypes[at]]
 		       aTotals[ atypes[at] ]+= a
 		       
@@ -638,6 +639,56 @@ function getRoundedGrade( grade ) {
 	return 0;
 }
 
+function computeGradePart(grades, type, weight){
+    var points = 0
+    var max = 0
+
+    if ( type == 'tests' && grades.length > 0 ) {
+	var lowtotal = grades[0]['points']
+	var lowtmax = grades[0]['max']	
+	var lowavg = grades[0]['points'] / lowtmax	
+	var lowapoints = lowtotal
+	var lowamax = lowtmax
+    }
+
+    for (var i=0; i < grades.length; i++) {
+	if ( grades[i]['points'] != -1 ) {
+	    var p = grades[i]['points'];
+	    var m = grades[i]['max'];
+	    points+= p
+	    max+= m
+	    
+	    if ( type == 'tests' ) {
+		if ( p < lowtotal ) {
+		    lowtotal = p
+		    lowtmax = m
+		}
+		if ( p/m < lowavg ) {
+		    lowavg = p/m
+		    lowapoints = p
+		    lowamax = m
+		}
+	    }
+	}
+    }
+    
+    if ( gradeOptions.indexOf('drop-avg') != -1 ) {
+	points-= lowapoints
+	max-= lowamax
+    }
+    else if ( gradeOptions.indexOf('drop-total') != -1 ) {
+	points-= lowtotal
+	max-= lowtmax
+    }
+    var grade = points / max;
+    if ( isNaN(grade) )
+	grade = 0;
+    if ( weight == null )
+	return grade * 100
+    else
+	return grade * weight;
+}
+/*
 function getGradeAverage( grades ) {
     var total = 0;
     var max = 0;
@@ -653,7 +704,7 @@ function getGradeAverage( grades ) {
 	avg = 0;
     return avg * 100;
 }
-
+*/
 function generateAttendanceTotalReport() {
     $('.active').removeClass('active')
     $('#nav_class').html('Classview <b class="caret">')
@@ -1582,6 +1633,9 @@ function deleteAssignmentConfirm() {
 
 //GRADE MODE FUNCTIONS
 function showGrades() {
+
+    $('.redalert').removeClass('redalert')
+    $('.orangealert').removeClass('orangealert')
     
     $.post("/loadclass", { classname : currentClass,term:selectedTerm },
            function( data, status ) {
@@ -1595,7 +1649,11 @@ function showGrades() {
 		   var grade = computeGrade( students[i], c['weights'] );
 		   $("#" + students[i]['id']).append("<div class=\"grade\"><br>"
                                              + grade.toFixed(2) +
-                                             "</div>");	       
+                                             "</div>");
+		   if ( grade < 65 )
+		       $("#" + students[i]['id']).addClass('redalert')
+		   else if ( grade < 75 )
+		       $("#" + students[i]['id']).addClass('orangealert')
 	       }
            });
 }
@@ -1607,57 +1665,10 @@ function computeGrade( student, weights ) {
     var atypes = Object.keys( student['assignments'] )
     for (var i=0; i < atypes.length; i++) {
 	var a = atypes[i]
-	grade+= computeGradePart(student['assignments'][a], weights[a], a)
+	grade+= computeGradePart(student['assignments'][a], a, weights[a])
     }
     grade = grade * 100;
     return grade;
-}
-
-function computeGradePart(grades, weight, type){
-    var points = 0
-    var max = 0
-
-    if ( type == 'tests' && grades.length > 0 ) {
-	var lowtotal = grades[0]['points']
-	var lowtmax = grades[0]['max']	
-	var lowavg = grades[0]['points'] / lowtmax	
-	var lowapoints = lowtotal
-	var lowamax = lowtmax
-    }
-
-    for (var i=0; i < grades.length; i++) {
-	if ( grades[i]['points'] != -1 ) {
-	    var p = grades[i]['points'];
-	    var m = grades[i]['max'];
-	    points+= p
-	    max+= m
-	    
-	    if ( type == 'tests' ) {
-		if ( p < lowtotal ) {
-		    lowtotal = p
-		    lowtmax = m
-		}
-		if ( p/m < lowavg ) {
-		    lowavg = p/m
-		    lowapoints = p
-		    lowamax = m
-		}
-	    }
-	}
-    }
-    
-    if ( gradeOptions.indexOf('drop-avg') != -1 ) {
-	points-= lowapoints
-	max-= lowamax
-    }
-    else if ( gradeOptions.indexOf('drop-total') != -1 ) {
-	points-= lowtotal
-	max-= lowtmax
-    }
-    var grade = points / max;
-    if ( isNaN(grade) )
-	grade = 0;
-    return grade * weight;
 }
 
 function changeWeights() {
