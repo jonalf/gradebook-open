@@ -12,10 +12,11 @@ var arrangeSelected = false;
 var selectedStudent;
 var studentList;
 var availableStudentList;
-var assignmentTypes = null;
-var addRemove = false;
-var rows;
-var cols;
+var assignmentTypes = null
+var addRemove = false
+var gradeOptions = []
+var rows
+var cols
 
 
 //CLASS SELECTION FUNCTIONS
@@ -111,6 +112,7 @@ function loadclass( clsname, term, mode ) {
 	       s = c["students"];
 	       currentClass = clsname;
 	       assignmentTypes = Object.keys(c['assignments'])
+	       gradeOptions = c['options']
 	       var numStudents = s.length;
 	       var tmp = '<div class="row">'
 	       tmp+= '<div class="col-md-10">'
@@ -190,7 +192,7 @@ function loadclass( clsname, term, mode ) {
 		   var html = '<form class="form-horizontal"><div class="col-sm-12">Weights:</div>'
 		   html+= loadAssignmentTypes( Object.keys(c['assignments']), 'weights', c)
 		   html+= '</div></form>'
-		   html+= '<button class="btn btn-info btn-block" onclick="changeWeights()">Change Weights</button><br><button class="btn btn-info btn-block" onclick="gradeOptions()">More Options</button></div>'
+		   html+= '<button class="btn btn-info btn-block" onclick="changeWeights()">Change Weights</button><br><button class="btn btn-info btn-block" onclick="setGradeOptions()">More Options</button></div>'
 		   $("#iface").html(html);
 		   $("#cterm").append('<button class="btn btn-warning btn-xs" onclick="loadhelp(4)" id="help_button">?</button>');
 		   $('#nav_class').html('Grades <b class="caret">')
@@ -1585,7 +1587,8 @@ function showGrades() {
            function( data, status ) {
 	       var c = eval("(" + data + ")" );
 	       students = c['students'];
-           
+               gradeOptions = c['options']
+	       
 	       $(".grade").remove();
            
 	       for (var i=0; i < students.length; i++) {
@@ -1604,21 +1607,52 @@ function computeGrade( student, weights ) {
     var atypes = Object.keys( student['assignments'] )
     for (var i=0; i < atypes.length; i++) {
 	var a = atypes[i]
-	grade+= computeGradePart(student['assignments'][a], weights[a])
+	grade+= computeGradePart(student['assignments'][a], weights[a], a)
     }
     grade = grade * 100;
     return grade;
 }
 
-function computeGradePart(grades, weight){
-    var points = 0;
-    var max = 0;
+function computeGradePart(grades, weight, type){
+    var points = 0
+    var max = 0
+
+    if ( type == 'tests' && grades.length > 0 ) {
+	var lowtotal = grades[0]['points']
+	var lowtmax = grades[0]['max']	
+	var lowavg = grades[0]['points'] / lowtmax	
+	var lowapoints = lowtotal
+	var lowamax = lowtmax
+    }
 
     for (var i=0; i < grades.length; i++) {
 	if ( grades[i]['points'] != -1 ) {
-	    points+= grades[i]['points'];
-	    max+= grades[i]['max'];
+	    var p = grades[i]['points'];
+	    var m = grades[i]['max'];
+	    points+= p
+	    max+= m
+	    
+	    if ( type == 'tests' ) {
+		if ( p < lowtotal ) {
+		    lowtotal = p
+		    lowtmax = m
+		}
+		if ( p/m < lowavg ) {
+		    lowavg = p/m
+		    lowapoints = p
+		    lowamax = m
+		}
+	    }
 	}
+    }
+    
+    if ( gradeOptions.indexOf('drop-avg') != -1 ) {
+	points-= lowapoints
+	max-= lowamax
+    }
+    else if ( gradeOptions.indexOf('drop-total') != -1 ) {
+	points-= lowtotal
+	max-= lowtmax
     }
     var grade = points / max;
     if ( isNaN(grade) )
@@ -1646,14 +1680,37 @@ function changeWeights() {
            });
 }
 
-function gradeOptions() {
+function setGradeOptions() {
     var html = 'Drop the lowest test grade by average: '
-    html+= '<button onclick="dropTestByAvg" class="btn btn-default">Select</button><br><br>'
+    html+= '<button onclick="saveGradeOption(\'drop-avg\')"'
+    if ( gradeOptions.indexOf( 'drop-avg' ) == -1 ) 
+	html+= 'class="btn btn-default">Inactive'
+    else
+	html+= 'class="btn btn-success">Active'
+    html+= '</button><br><br>'
+
     html+= 'Drop the lowest test grade by total points: '
-    html+= '<button onclick="dropTestByTotal" class="btn btn-default">Select</button>'
+    html+= '<button onclick="saveGradeOption(\'drop-total\')"'
+    if ( gradeOptions.indexOf( 'drop-total' ) == -1 ) 
+	html+= 'class="btn btn-default">Inactive</button>'
+    else
+	html+= 'class="btn btn-success">Active</button>'
 
     $('.modal-body').html( html )
     $('.modal-title').html('Grade Options')
     $('#mainmodal').modal('show')
 }
+
+function saveGradeOption( opt ) {
+
+    $.post("/savegradeoptions", {classname:currentClass,
+				term:selectedTerm,
+				option: opt },
+	   function(data, status) {
+	       $('#mainmodal').modal('hide')
+               showGrades();
+           });   
+}
+
+
 //====== END GRADE MODE FUNCTIONS ============

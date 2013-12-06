@@ -528,6 +528,36 @@ class db:
                                  'term':term},
                                 {'$set':{'weights':weights}})
 
+    def saveGradeOptions(self, csp, term, option):
+        currentOptions =  self.db.classes.find_one({'code':csp[0],
+                                                    'section':csp[1],
+                                                    'period':csp[2],
+                                                    'term':term},
+                                                   { 'options':1})['options']
+        if option == 'drop-avg':
+            if 'drop-total' in currentOptions:
+                currentOptions.remove( 'drop-total' )
+                currentOptions.append( option )
+            elif 'drop-avg' in currentOptions:
+                currentOptions.remove( 'drop-avg' )
+            else:
+                currentOptions.append( option )
+
+        if option == 'drop-total':
+            if 'drop-avg' in currentOptions:
+                currentOptions.remove( 'drop-avg' )
+                currentOptions.append( option )
+            elif 'drop-total' in currentOptions:
+                currentOptions.remove( 'drop-total' )
+            else:
+                currentOptions.append( option )
+
+        self.db.classes.update({'code':csp[0],
+                                'section':csp[1],
+                                'period':csp[2],
+                                'term':term},
+                               {'$set':{'options':currentOptions}})
+
     def saveInfo(self, csp, term, sid, nick, sid2, email, stuyid, hr):
         self.db.classes.update( {'code':csp[0],
                                  'section':csp[1],

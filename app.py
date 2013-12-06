@@ -515,14 +515,27 @@ def changeweights():
     weights =  json.loads(request.form['weights'])
     mydb = db.db()
 
-    print 'weights:'
-    print weights
-
     if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
         return 'false'
     mydb.changeWeights((nameParts[0], nameParts[1], nameParts[2]),term,
                         weights)
     return "done";
+
+@app.route('/savegradeoptions', methods=["POST"])
+@requireauth('savegradeoptions')
+def savegradeoptions():
+    clsn = request.form["classname"]
+    term = request.form['term']
+    nameParts = clsn.split("-")
+    option = request.form['option']
+    mydb = db.db()
+
+    if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
+        return 'false'
+    
+    mydb.saveGradeOptions((nameParts[0], nameParts[1], nameParts[2]),term, option)
+    return "done";
+
 #=============================================
 
 if __name__=="__main__":
