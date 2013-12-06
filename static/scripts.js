@@ -672,21 +672,27 @@ function computeGradePart(grades, type, weight){
 	}
     }
     
-    if ( gradeOptions.indexOf('drop-avg') != -1 ) {
-	points-= lowapoints
-	max-= lowamax
+    if ( type == 'tests' ) {
+	if ( gradeOptions.indexOf('drop-avg') != -1 ) {
+	    points-= lowapoints
+	    max-= lowamax
+	}
+	else if ( gradeOptions.indexOf('drop-total') != -1 ) {
+	    points-= lowtotal
+	    max-= lowtmax
+	}
     }
-    else if ( gradeOptions.indexOf('drop-total') != -1 ) {
-	points-= lowtotal
-	max-= lowtmax
-    }
+
     var grade = points / max;
     if ( isNaN(grade) )
 	grade = 0;
-    if ( weight == null )
+
+    if ( weight == null ) {
 	return grade * 100
-    else
+    }
+    else {
 	return grade * weight;
+    }
 }
 /*
 function getGradeAverage( grades ) {
