@@ -20,10 +20,10 @@ def fixPicLinks( s ):
 def fixLinks( s ):
     fixed = s.replace('/logout', '/gradebook/logout')
     fixed = fixed.replace('/selectclass', '/gradebook/selectclass')
-    fixed = fixed.replace('/static/scripts.js', '/static/gradebook/scripts2.js')
-    fixed = fixed.replace('/static/style.css', '/static/gradebook/style.css')
-    fixed = fixed.replace('/static/bootstrap/js/bootstrap.min.js', '/static/gradebook/bootstrap/js/bootstrap.min.js')
-    fixed = fixed.replace('/static/bootstrap/css/bootstrap.min.css', '/static/gradebook/bootstrap/css/bootstrap.min.css')
+    fixed = fixed.replace('/static/scripts.js', '/gradebook/static/scripts2.js')
+    fixed = fixed.replace('/static/style.css', '/gradebook/static/style.css')
+    fixed = fixed.replace('/static/bootstrap/js/bootstrap.min.js', '/gradebook/static/bootstrap/js/bootstrap.min.js')
+    fixed = fixed.replace('/static/bootstrap/css/bootstrap.min.css', '/gradebook/static/bootstrap/css/bootstrap.min.css')
     fixed = fixed.replace('/login', '/gradebook/login')
     fixed = fixed.replace('/classview', '/gradebook/classview')    
     return fixed
