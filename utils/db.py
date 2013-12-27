@@ -614,6 +614,74 @@ class db:
                                         'term':''},
                                        {'$set' : { 'term' : term }})
         
+    def addAssignmentType(self, csp, term, atname ):
+        assignments =  self.db.classes.find_one({'code':csp[0],
+                                                 'section':csp[1],
+                                                 'period':csp[2],
+                                                 'term':term},
+                                                {'assignments':1})['assignments']
+        weights =  self.db.classes.find_one({'code':csp[0],
+                                             'section':csp[1],
+                                             'period':csp[2],
+                                             'term':term},
+                                            {'weights':1})['weights']
+        students = self.getStudents( csp, term )
+
+        for s in students:
+            s[ 'assignments' ][ atname ] = []
+        assignments[ atname ] = []
+        weights[ atname ] = 0
+
+        self.db.classes.update({'code':csp[0],
+                                'section':csp[1],
+                                'period':csp[2],
+                                'term':term},
+                               {'$set' : { 'assignments' : assignments } })
+        self.db.classes.update({'code':csp[0],
+                                'section':csp[1],
+                                'period':csp[2],
+                                'term':term},
+                               {'$set' : { 'weights' : weights } })
+        self.db.classes.update({'code':csp[0],
+                                'section':csp[1],
+                                'period':csp[2],
+                                'term':term},
+                               {'$set' : { 'students' : students } })
+
+    def removeAssignmentType(self, csp, term, atname ):
+        assignments =  self.db.classes.find_one({'code':csp[0],
+                                                 'section':csp[1],
+                                                 'period':csp[2],
+                                                 'term':term},
+                                                {'assignments':1})['assignments']
+        weights =  self.db.classes.find_one({'code':csp[0],
+                                             'section':csp[1],
+                                             'period':csp[2],
+                                             'term':term},
+                                            {'weights':1})['weights']
+        students = self.getStudents( csp, term )
+
+        for s in students:
+            s[ 'assignments' ].pop( atname )
+        assignments.pop( atname )
+        weights.pop( atname )
+
+        self.db.classes.update({'code':csp[0],
+                                'section':csp[1],
+                                'period':csp[2],
+                                'term':term},
+                               {'$set' : { 'assignments' : assignments } })
+        self.db.classes.update({'code':csp[0],
+                                'section':csp[1],
+                                'period':csp[2],
+                                'term':term},
+                               {'$set' : { 'weights' : weights } })
+        self.db.classes.update({'code':csp[0],
+                                'section':csp[1],
+                                'period':csp[2],
+                                'term':term},
+                               {'$set' : { 'students' : students } })
+
     def addClassField(self, fname, ftype, dKeyNames=[], dVal=0):
 
         if ftype == T_ARRAY:

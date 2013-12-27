@@ -521,7 +521,36 @@ def changeweights():
         return 'false'
     mydb.changeWeights((nameParts[0], nameParts[1], nameParts[2]),term,
                         weights)
-    return "done";
+    return "done"
+
+@app.route('/createassignmenttype', methods=["POST"])
+@requireauth('createassignmenttype')
+def createassignmenttypr():
+    clsn = request.form["classname"]
+    term = request.form['term']
+    nameParts = clsn.split("-")
+    atname = request.form['atname']
+    mydb = db.db()
+    if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
+        return 'false'
+    mydb.addAssignmentType((nameParts[0], nameParts[1], nameParts[2]),term,
+                           atname)
+    return 'done'
+
+@app.route('/removeassignmenttype', methods=["POST"])
+@requireauth('removeassignmenttype')
+def removeassignmenttypr():
+    clsn = request.form["classname"]
+    term = request.form['term']
+    nameParts = clsn.split("-")
+    atname = request.form['atname']
+    mydb = db.db()
+    if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
+        return 'false'
+    mydb.removeAssignmentType((nameParts[0], nameParts[1], nameParts[2]),term,
+                           atname)
+    print atname
+    return 'done'
 
 @app.route('/savegradeoptions', methods=["POST"])
 @requireauth('savegradeoptions')

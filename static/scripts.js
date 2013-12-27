@@ -61,8 +61,6 @@ function loadSelectMenu(term) {
 		   html+='<hr>'
 		   for (var j=0; j < oldClasses[i].length; j++) {
 		       oldClass = oldClasses[i][j].split(' ')
-//		       html+= "<li><a onclick=\"loadclass('" + 
-//		       oldClass[1] + "', '" + oldClass[0] + "', 0)\">"+ 
 		       html+= '<li><a href="/classview?classname=' +
 			   oldClass[1] + '&term=' + oldClass[0] +'">' +
 			   oldClasses[i][j] + '</a></li>'
@@ -192,7 +190,7 @@ function loadclass( clsname, term, mode ) {
 		   var html = '<form class="form-horizontal"><div class="col-sm-12">Weights:</div>'
 		   html+= loadAssignmentTypes( Object.keys(c['assignments']), 'weights', c)
 		   html+= '</div></form>'
-		   html+= '<button class="btn btn-info btn-block" onclick="changeWeights()">Change Weights</button><br><button class="btn btn-info btn-block" onclick="setGradeOptions()">More Options</button></div>'
+		   html+= '<button class="btn btn-info btn-block" onclick="changeWeights()">Change Weights</button><br><button class="btn btn-info btn-block" onclick="setGradeOptions()">More Options</button><br><button class="btn btn-info btn-block" onclick="addAssignmentType()">Add Assignment Type</button><br><button class="btn btn-info btn-block" onclick="removeAssignmentType()">Remove Assignment Type</button>'
 		   $("#iface").html(html);
 		   $("#cterm").append('<button class="btn btn-warning btn-xs" onclick="loadhelp(4)" id="help_button">?</button>');
 		   $('#nav_class').html('Grades <b class="caret">')
@@ -1694,6 +1692,55 @@ function changeWeights() {
 			      weights: JSON.stringify(weights)},
            function(data, status) {
                showGrades();
+           });
+}
+
+function addAssignmentType() {
+
+    var html = 'Enter name of new assignment type: '
+    html+= '<input type="text" class="form-control input-sm" id="newAssignmentType">'
+
+    var button = '<button type="button" class="mbutton btn btn-info" onclick="createAssignmentType()">Confirm</button>'
+    
+    $('.modal-body').html( html )
+    $('.modal-title').html('Add Assignment Type')
+    $('.modal-footer').append( button )
+    $('#mainmodal').modal('show')
+}
+
+function createAssignmentType() {
+
+    var atname = $('#newAssignmentType').val()
+    $.post("/createassignmenttype", {classname:currentClass,
+				     term:selectedTerm,
+				     atname:atname},
+           function(data, status) {
+	       loadclass( currentClass, selectedTerm, M_GRADES );
+	       clearModal()
+           });
+}
+
+function removeAssignmentType() {
+    
+    var html = 'WARNING: This action cannot be undone. You will remove all data relating the the selected assignment type from the server. It is suggested that you download a backup before taking this action. Proceed at your own risk<br><br>'
+    html+= loadAssignmentTypes( assignmentTypes, 'radio' )   
+    var button = '<button type="button" class="mbutton btn btn-info" onclick="deleteAssignmentType()">Confirm</button>'
+
+    $('.modal-body').html( html )
+    $('.modal-title').html('Remove Assignment Type')
+    $('.modal-footer').append( button )
+    $('#mainmodal').modal('show')
+}
+
+function deleteAssignmentType() {
+
+    var atname = $('[type=radio]:checked').val()
+    $.post("/removeassignmenttype", {classname:currentClass,
+				     term:selectedTerm,
+				     atname:atname},
+           function(data, status) {
+	       loadclass( currentClass, selectedTerm, M_GRADES );
+	       clearModal()
            });
 }
 
