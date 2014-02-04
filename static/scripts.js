@@ -175,9 +175,9 @@ function loadclass( clsname, term, mode ) {
 		   $('#nav_class').html('Attendance <b class="caret">')
 	       }
 	       else if ( mode == M_ASSIGNMENT ) {
-		   var html = '<div class="form-group"><input type="text" class="form-control input-sm" value="Assignment Name" id="aname">'
-		   html+= '<input class="form-control input-sm" type="text" pattern="[0-9]*" value="Max Points" id="amax">'
-		   html+= '<input type="text" class="form-control input-sm" pattern="[0-9]*" value="Default Points" id="adefault"><br>'
+		   var html = '<div class="form-group"><input type="text" class="form-control input-sm" placeholder="Assignment Name" id="aname">'
+		   html+= '<input class="form-control input-sm" type="text" pattern="[0-9]*" placeholder="Max Points" id="amax">'
+		   html+= '<input type="text" class="form-control input-sm" pattern="[0-9]*" placeholder="Default Points" id="adefault"><br>'
 		   html+= loadAssignmentTypes( Object.keys(c['assignments']), 'radio')
 		   html+= '<br><button class="btn btn-info btn-block" id="action_buton" onclick="saveGrades()">Save Grades</button><br><button class="btn btn-warning btn-block" id="adelete" onclick="deleteAssignment()">Delete Assignment</button></div><hr>'
 		   html+= '<select class="form-control" id="aselection"></select><br><button class="btn btn-info btn-block" id="apick" onclick="changeAssignment()">Change Assignment</button><br></div>'

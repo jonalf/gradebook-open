@@ -13,7 +13,7 @@ if gethostname() == 'nibbler':
 else:
     userfile = 'data/gbusers'
 
-CURRENT_TERM = '2013-fall'
+CURRENT_TERM = '2014-spring'
 
 app = Flask(__name__)
 app.secret_key='2r\xe9w| \xcf\xb7f\xc8\x94p\xd0\xfb\xb6\x96VZ`\x14\x1c\x05X\xb7'
