@@ -5,6 +5,7 @@ def dataTrim( filename ):
     f = open(filename)
     lines = f.read().strip()
     lines = lines.replace('\t', ',')
+    lines = lines.replace('* ', '')
     lines = lines.split('\n')
     f.close()
     for i in range( len(lines) ):
