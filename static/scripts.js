@@ -587,6 +587,7 @@ function getGradeTable( students, assignments, type ) {
 	    }
 	}
     }
+
     table+= "<tr><td colspan=\"2\">Averages</td>";
     for (var i=0; i < ascores.length; i++) {
 	ascores[i] = ascores[i] / acounts[i];
@@ -596,9 +597,9 @@ function getGradeTable( students, assignments, type ) {
 
     table+= "<tr><td colspan=\"2\">Medians</td>";
     for (var i=0; i < agrades.length; i++) {
+	agrades[i].sort( function(a, b) { return a - b; } );
 	if ( acounts[i] % 2 == 1 ) {
 	    median = agrades[i][ Math.floor(acounts[i] / 2) ];	    
-	    console.log( median );
 	}
 	else {
 	    median = agrades[i][ Math.floor(acounts[i] / 2) ];
