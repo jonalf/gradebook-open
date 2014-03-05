@@ -6,6 +6,7 @@ import json
 from socket import gethostname
 from utils import db
 from utils import user
+from utils import studentdb
 from utils.user import requireauth, markUsage
 
 if gethostname() == 'nibbler':
@@ -66,6 +67,66 @@ def loadselect():
     teacher = session['teacher']
     mydb = db.db();
     return json.dumps( mydb.getAllClasses(teacher) )
+
+#=============================================
+
+
+#STUDENT LOGIN FUNCTIONS
+@app.route("/studentlogin", methods = ["POST", "GET"])
+def studentlogin():
+    if request.method == "GET":
+        return render_template("studentlogin.html")
+    else:
+        if 'user' in request.form:
+            u = request.form['user']
+            p = request.form['pass']
+        else:
+            u = 'anon'
+        
+        students = studentdb.studentdb()        
+        if u not in students.getIDList():
+            print u
+            print 'no esta aqui'
+            return redirect(url_for('studentlogin'))
+
+        elif not students.isPasswordSet( u ):
+            return render_template("studentpwset.html", user = u)
+            
+        elif students.authenticate( u, p ):
+            session['user'] = u
+            print session
+            return redirect( url_for('studentview'))
+        
+        else:
+            return redirect(url_for('studentlogin'))
+
+@app.route('/studentpwset', methods = ["POST", "GET"])
+def studentpwset():
+    if request.method == 'GET':
+        return render_template("studentpwset.html")
+    else:
+        u = request.form['user']
+        p = request.form['pass']
+        p2 = request.form['pass2']
+
+        if p == '' or p2 == '':
+            return render_template("studentpwset.html", user = u, message = 'Please enter a password into both boxes below')
+        elif p != p2:
+            return render_template("studentpwset.html", user = u, message = 'Both passwords did not match, please try again.')
+        else:
+            students = studentdb.studentdb()
+            students.setPassword( u, p )
+            return render_template("studentlogin.html", user = u, message = 'Your password has been set, please login below.')
+
+@app.route('/studentview')
+def studentview():
+    return render_template("studentview.html")
+    
+
+@app.route('/studentlogout')
+def studentlogout():
+    session.pop('user', None)
+    return redirect( url_for('studentlogin'))
 
 #=============================================
 

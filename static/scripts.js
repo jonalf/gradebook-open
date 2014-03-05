@@ -558,12 +558,14 @@ function getGradeTable( students, assignments, type ) {
     var anames = new Array();
     var ascores = new Array( assignments.length );
     var acounts = new Array( assignments.length );
+    var agrades = new Array( assignments.length);
     for (var i=0; i < ascores.length; i++)
 	ascores[i] = 0;
 
     for (var i=0; i < assignments.length; i++) {
 	anames[i] = assignments[i]['name'];
 	acounts[i] = 0;
+	agrades[i] = [];
     }
 
     var table = "<table class=\"report\"><tr class=\"report1\"><th>Last Name</th><th>First Name</th>";
@@ -579,6 +581,7 @@ function getGradeTable( students, assignments, type ) {
 	    if ( p != -1 ) {
 		ascores[g] += p;
 		acounts[g]+= 1;
+		agrades[g].push( p );
 	    }
 	}
     }
@@ -587,7 +590,30 @@ function getGradeTable( students, assignments, type ) {
 	ascores[i] = ascores[i] / acounts[i];
 	table+= "<td>" + ascores[i].toFixed(2) + "</td>";
     }
+    table+= "</tr>";
+    table+= "<tr><td colspan=\"2\">Medians</td>";
+    for (var i=0; i < agrades.length; i++) {
+	if ( acounts[i] % 2 == 1 ) {
+	    median = agrades[i][ Math.floor(acounts / 2) ];
+	}
+	else {
+	    median = agrades[i][ Math.floor(acounts / 2) ];
+	    median+= agrades[i][ Math.floor(acounts / 2) - 1];
+	    median = median / 2;
+	}
+	table+= "<td>" + median.toFixed(2) + "</td>";
+    }
+/*
+    table+= "</tr>";
+
+    table+= "<tr><td colspan=\"2\">Standard Deviations</td>";
+    for (var i=0; i < ascores.length; i++) {
+	ascores[i] = ascores[i] / acounts[i];
+	table+= "<td>" + ascores[i].toFixed(2) + "</td>";
+    }
+*/
     table+= "</tr></table>";
+
     return table;
 }
 
