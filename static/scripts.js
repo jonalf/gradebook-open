@@ -25,8 +25,10 @@ function loadselect(term) {
     $.post("/loadselect",{},
            function( data, status ) {
 	       var c = eval("(" + data + ")" );
-	       var currentClasses = getClassList(c[selectedTerm], '')
-	       $("#selection").html( currentClasses );
+	       if ( c[selectedTerm] ) {
+		   var currentClasses = getClassList(c[selectedTerm], '')
+		   $("#selection").html( currentClasses );
+	       }
 
 	       var oldClasses = '';
 	       for (var i=0; i<c['terms'].length; i++) {
@@ -71,7 +73,7 @@ function loadSelectMenu(term) {
 }
 
 function getClassList( classes, term ) {
-    
+
     var text = ''
     var classNames = getClassList2( classes, term )
     for ( var i=0; i < classNames.length; i++ ) {
@@ -81,7 +83,7 @@ function getClassList( classes, term ) {
 }
 
 function getClassList2( classes, term ) {
-    
+//    console.log(classes);
     var classNames = new Array();
     for ( var i=0; i < classes.length; i++ ) {
 	classNames[i] = classes[i][0] + "-" + 
@@ -590,21 +592,22 @@ function getGradeTable( students, assignments, type ) {
 	ascores[i] = ascores[i] / acounts[i];
 	table+= "<td>" + ascores[i].toFixed(2) + "</td>";
     }
-/*
     table+= "</tr>";
+
     table+= "<tr><td colspan=\"2\">Medians</td>";
     for (var i=0; i < agrades.length; i++) {
 	if ( acounts[i] % 2 == 1 ) {
-	    median = agrades[i][ Math.floor(acounts / 2) ];
+	    median = agrades[i][ Math.floor(acounts[i] / 2) ];	    
+	    console.log( median );
 	}
 	else {
-	    median = agrades[i][ Math.floor(acounts / 2) ];
-	    median+= agrades[i][ Math.floor(acounts / 2) - 1];
+	    median = agrades[i][ Math.floor(acounts[i] / 2) ];
+	    median+= agrades[i][ Math.floor(acounts[i] / 2) - 1];
 	    median = median / 2;
 	}
 	table+= "<td>" + median.toFixed(2) + "</td>";
     }
-
+/*
     table+= "</tr>";
 
     table+= "<tr><td colspan=\"2\">Standard Deviations</td>";
