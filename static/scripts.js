@@ -590,6 +590,7 @@ function getGradeTable( students, assignments, type ) {
 	ascores[i] = ascores[i] / acounts[i];
 	table+= "<td>" + ascores[i].toFixed(2) + "</td>";
     }
+/*
     table+= "</tr>";
     table+= "<tr><td colspan=\"2\">Medians</td>";
     for (var i=0; i < agrades.length; i++) {
@@ -603,7 +604,7 @@ function getGradeTable( students, assignments, type ) {
 	}
 	table+= "<td>" + median.toFixed(2) + "</td>";
     }
-/*
+
     table+= "</tr>";
 
     table+= "<tr><td colspan=\"2\">Standard Deviations</td>";
