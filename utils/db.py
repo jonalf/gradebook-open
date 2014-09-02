@@ -40,7 +40,7 @@ def newstudent(last,first,stuyid,hr,id,email):
             'absent':[],
             'late':[],
             'excused':[],
-            'exlate':[],
+            'Exlate':[],
             'assignments':{ 'work':[], 'tests':[], 'projects':[] },
             'work':[],
             'tests':[],
@@ -187,6 +187,10 @@ class db:
 
     def getClasses(self,teacher, term):
         classes = [ (x['code'],x['section'],x['period']) for x in self.db.classes.find({'teacher':teacher, 'term':term})]
+        return classes
+
+    def getAllTermClasses(self, term):
+        classes = [ (x['code'],x['section'],x['period']) for x in self.db.classes.find({'term':term})]
         return classes
 
     def getClasses2(self, teacher):

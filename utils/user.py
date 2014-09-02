@@ -6,24 +6,121 @@ import md5
 import getpass
 import db
 
+from pymongo import Connection
+import hashlib
+
 I_USERNAME = 0
 I_DBUSERNAME = 1
 I_PASSWORD = 2
 
-if gethostname() == 'nibbler':
-    ufile = '/var/www/gradebook/data/gbusers'
-    usageFile = '/var/www/gradebook/utils/usage'
-else:
-    ufile = '../data/gbusers'
-    usageFile = 'usage'
+def getUsers():
+    connection = Connection()
+    userCollection = connection.gradebook2.users
+    users = [ (x['uname'], x['dbname'], x['password'], x['usage']) for x in userCollection.find()]
+    return users
 
-def authenticate(user, passw, userfile=ufile):
-    passw = md5.new(passw).digest()
-    users = getUserList(userfile)
-    for u in users:
-        if user == u[I_USERNAME] and passw == u[I_PASSWORD]:
-            return True
+def getUserList():
+    connection = Connection()
+    userCollection = connection.gradebook2.users
+    users = [ x['uname'] for x in userCollection.find()]
+    return users
+
+def addUser(user, dbuser, passw):
+    connection = Connection()
+    userCollection = connection.gradebook2.users
+    pw = hashlib.sha1( passw ).hexdigest()
+    userCollection.insert( { 'uname' : user, 'dbname' : dbuser, 'password' : pw, 'usage' : 0 } )
+
+def removeUser( uname ):
+    connection = Connection()
+    userCollection = connection.gradebook2.users
+    userCollection.remove( {'uname' : uname} )
+
+
+def newUser( dbusers ):
+    dbusercheck = False
+    usercheck = False
+    pwcheck = False
+
+    connection = Connection()
+    userCollection = connection.gradebook2.users
+
+    while not dbusercheck:
+        dbuser = raw_input('Enter name in database: ')
+        if dbuser not in dbusers:
+            print dbuser + ' is not in the database.\n'
+        else:
+            dbusercheck = True
+    
+    while not usercheck:
+        user = raw_input('Enter username: ')
+        if userCollection.find_one( {'uname': user} ):
+            print user + ' is already in user, choose a new name.\n'
+        else:
+            usercheck = True
+
+    while not pwcheck:
+        passw1 = getpass.getpass()
+        passw2 = getpass.getpass('Retype password:')
+        
+        if passw1 != passw2:
+            print 'passwords do not match, try again\n'
+        else:
+            pwcheck = True
+
+    pw = hashlib.sha1( passw1 ).hexdigest()
+    addUser(user, dbuser, passw1)
+
+def newPW():
+    usercheck = False
+    pwcheck = False
+
+    connection = Connection()
+    userCollection = connection.gradebook2.users
+
+    while not usercheck:
+        user = raw_input('Enter username: ')
+        if userCollection.find_one( {'uname': user} ):
+            usercheck = True
+        else:
+            print user + ' is not a valid user'
+
+    while not pwcheck:
+        passw1 = getpass.getpass()
+        passw2 = getpass.getpass('Retype password:')
+        
+        if passw1 != passw2:
+            print 'passwords do not match, try again\n'
+        else:
+            pwcheck = True
+
+    pw = hashlib.sha1( passw1 ).hexdigest()
+    userCollection.update( {'uname':user}, { '$set' : { 'password' : pw } })
+    
+
+def authenticate( uname, passw ):
+    connection = Connection()
+    userCollection = connection.gradebook2.users
+
+    pw = hashlib.sha1( passw ).hexdigest()
+    user = userCollection.find_one( {'uname' : uname} )
+    if user and user['password'] == pw:
+        return True
     return False
+
+def markUsage( user ):
+    connection = Connection()
+    userCollection = connection.gradebook2.users
+    user = userCollection.find_one( {'uname' : uname} )
+    usage = user['usage']
+    usage+= 1
+    userCollection.update( {'uname':user}, { '$set' : { 'usage' : usage } })
+
+def getDBUser( uname ):
+    connection = Connection()
+    userCollection = connection.gradebook2.users
+    user = userCollection.find_one( {'uname' : uname} )
+    return user['dbname']
 
 def requireauth(page):
     def decorator(f):
@@ -36,163 +133,25 @@ def requireauth(page):
         return wrapper
     return decorator
 
-def markUsage( user ):
-    f = open(usageFile, 'r')
-    s = f.read().strip().split('\n');
-    f.close()
-
-    d = {}
-    if s[0] != '':
-        for line in s:
-            l = line.split(':')
-            d[l[0]] = int(l[1])
-            
-    if user in d.keys():
-        d[user] = d[user] + 1
-    else:
-        d[user] = 0
-    s = ''
-    for u in d:
-        s+= u + ':' + str(d[u]) + '\n'
-    
-    f = open(usageFile, 'w')
-    f.write(s)
-    f.close()
-
-
-def getDBUser(user, userfile=ufile):
-    users = getUserList(userfile)
-    for u in users:
-        if user == u[I_USERNAME]:
-            return u[I_DBUSERNAME]
-    return False
-
-def getUsers(userfile = ufile):
-    users = getUserList(userfile)
-    uList = []
-    for u in users:
-        uList.append(u[I_USERNAME])
-    return uList
-
-def getUserList(userfile=ufile):
-    f = open(userfile)
-    users = f.read().strip().split('\n');
-    f.close()
-    i = 0
-    while i < len(users):
-        users[i] = users[i].split(',')
-        i+=1
-    return users
-        
-def addUser(user, dbuser, passw, userfile=ufile):
-    pw = md5.new(passw).digest()
-    line = ','.join([user, dbuser, pw])
-    line+= '\n'
-    f = open(userfile, 'a')
-    f.write( line )
-    f.close()
-
-def newUser(dbusers, userfile=ufile):
-    pwcheck = False
-    dbusercheck = False
-    usercheck = False
-    
-    f = open(userfile)
-    s = f.read().strip().split('\n');
-    f.close()
-    users = getUsers()
-
-    while not dbusercheck:
-        dbuser = raw_input('Enter name in database: ')
-        if dbuser not in dbusers:
-            print dbuser + ' is not in the database.\n'
-        else:
-            dbusercheck = True
-        
-    while not usercheck:
-        user = raw_input("Enter username: ")
-        if user in users:
-            print user + ' is already in use, choose a new name.\n'
-        else:
-            usercheck = True
-
-    while not pwcheck:
-        passw1 = getpass.getpass()
-        passw2 = getpass.getpass('Retype password:')
-        
-        if passw1 != passw2:
-            print 'passwords do not match, try again\n'
-        else:
-            pwcheck = True
-    addUser(user, dbuser, passw1)
-
-def newPW():
-    usercheck = False
-    pwcheck = False
-    users = getUsers()
-
-    while not usercheck:
-        user = raw_input("Enter username: ")
-        if user not in users:
-            print user + ' is not a valid username.\n'
-        else:
-            usercheck = True
-
-    while not pwcheck:
-        passw1 = getpass.getpass()
-        passw2 = getpass.getpass('Retype password:')
-        
-        if passw1 != passw2:
-            print 'passwords do not match, try again\n'
-        else:
-            pwcheck = True
-    passw1 = md5.new(passw1).digest()
-    changePW(user, passw1)
-    
-def changePW(user, passw, userfile=ufile):
-    lines = getUserList()
-    i = 0
-    while i < len(lines):
-        if lines[i][I_USERNAME] == user:
-            lines[i][I_PASSWORD] = passw
-        i+=1
-
-    f = open(userfile, 'w')
-    for l in lines:
-        line = ','.join(l)
-        line+= '\n'
-        f.write( line )
-    f.close()
-
 def delUser():
     usercheck = False
-    users = getUsers()
+    connection = Connection()
+    userCollection = connection.gradebook2.users
 
     while not usercheck:
-        user = raw_input("Enter username: ")
-        if user not in users:
-            print user + ' is not a valid username.\n'
-        else:
+        uname = raw_input("Enter username: ")
+        if userCollection.find_one( {'uname' : uname} ):
             usercheck = True
-    removeUser(user)
+        else:
+            print uname + ' is not a valid username.\n'
+
+    removeUser(uname)
     
-def removeUser(user, userfile=ufile):
-    lines = getUserList()
-    i = 0
-
-    f = open(userfile, 'w')
-    for l in lines:
-        if l[I_USERNAME] != user:
-            line = ','.join(l)
-            line+= '\n'
-            f.write( line )
-    f.close()
-
 def showUsers():
-    users = getUserList()
+    users = getUsers()
     print '\nCurrent Users:'
     for user in users:
-        print user[I_USERNAME] + '\t' + user[I_DBUSERNAME]
+        print user[0] + '\t' + user[1]
 
 #Functions for interactive mode
 def menu():

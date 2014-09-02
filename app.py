@@ -38,13 +38,13 @@ def login():
             p = request.form['pass']
         else:
             u = 'anon'
-        if u not in user.getUsers(userfile): #userdic.keys():
+        if u not in user.getUserList(): #userdic.keys():
             print u
             print 'no esta aqui'
             return redirect(url_for('login'))
-        elif user.authenticate( u, p, userfile ):
+        elif user.authenticate( u, p ):
             session['user'] = u
-            session['teacher'] = user.getDBUser(u, userfile) #userdic[u]
+            session['teacher'] = user.getDBUser(u) #userdic[u]
             print session
             return redirect( url_for('selectclass'))
         else:
@@ -120,13 +120,27 @@ def studentpwset():
 
 @app.route('/studentview')
 def studentview():
-    return render_template("studentview.html")
+    return render_template("studentview.html", user=session['user'])
     
 
 @app.route('/studentlogout')
 def studentlogout():
     session.pop('user', None)
     return redirect( url_for('studentlogin'))
+
+@app.route('/studentload', methods = ['POST'])
+def studentload():
+    sdb = studentdb.studentdb()
+    cdb = db.db()
+    student = sdb.getStudent( session['user'] )
+    sdb.getGrades( session['user'], CURRENT_TERM )
+    return json.dumps(student)
+
+@app.route('/studentgradeload', methods = ['POST'])
+def studentgradeload():
+    sdb = studentdb.studentdb()
+    grades = sdb.getGrades( session['user'], CURRENT_TERM )
+    return json.dumps(grades)
 
 #=============================================
 
