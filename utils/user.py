@@ -108,13 +108,13 @@ def authenticate( uname, passw ):
         return True
     return False
 
-def markUsage( user ):
+def markUsage( dbname ):
     connection = Connection()
     userCollection = connection.gradebook2.users
-    user = userCollection.find_one( {'uname' : uname} )
+    user = userCollection.find_one( {'dbname' : dbname} )
     usage = user['usage']
     usage+= 1
-    userCollection.update( {'uname':user}, { '$set' : { 'usage' : usage } })
+    userCollection.update( {'dbname':dbname}, { '$set' : { 'usage' : usage } })
 
 def getDBUser( uname ):
     connection = Connection()
