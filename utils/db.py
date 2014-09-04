@@ -40,7 +40,7 @@ def newstudent(last,first,stuyid,hr,id,email):
             'absent':[],
             'late':[],
             'excused':[],
-            'Exlate':[],
+            'exlate':[],
             'assignments':{ 'work':[], 'tests':[], 'projects':[] },
             'work':[],
             'tests':[],
