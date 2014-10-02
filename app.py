@@ -68,8 +68,34 @@ def loadselect():
     mydb = db.db();
     return json.dumps( mydb.getAllClasses(teacher) )
 
+@app.route("/pwreset")
+@requireauth('/pwreset')
+def pwreset():
+    print "RESET!"
+    if 'user' not in session:
+        return redirect(url_for("login"))
+    else:
+        return render_template("pwreset.html", usr = session['user'])
+
 #=============================================
 
+@app.route("/newpw", methods = ["POST", "GET"])
+@requireauth('/newpw')
+def newpw():
+    if request.method == "GET":
+        return redirect(url_for("login"))
+    else:
+        u = request.form['user']
+        op = request.form['oldpass']
+        np1 = request.form['newpass1']
+        np2 = request.form['newpass2']
+
+        print u
+        print op
+        print np1
+        print np2
+        
+        return ''
 
 #STUDENT LOGIN FUNCTIONS
 @app.route("/studentlogin", methods = ["POST", "GET"])
@@ -215,6 +241,8 @@ def validip():
         if ip.startswith( i ):
             return 'true'
     return 'false'
+
+
 #=============================================
 
 # BACKUP VIEW FUNCTIONS
