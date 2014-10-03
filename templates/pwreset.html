@@ -4,10 +4,20 @@
 {% block header %}
 	  <li><a href="/logout">Logout</a></li>
 	  <li><a href="/selectclass">Select</a></li>
-	  <li><a href="/pwreset">Password Reset</a></li>
+	  <li><a href="/pwreset">Change Password</a></li>
 {% endblock %}
 
 {% block content %}
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+      <div class="redalert"><center><h3>	  
+    {% for message in messages %}
+      {{ message }}
+    {% endfor %}
+    </center></div><h3>
+  {% endif %}
+{% endwith %}
 
 <h2>Reset Password for: {{ usr }} </h2>
 <form method="POST" action="/newpw" role="form" class="form-inline">

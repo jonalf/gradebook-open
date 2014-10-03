@@ -9,16 +9,6 @@ T_NUMBER = 1
 T_STRING = 2
 T_DICTIONARY = 3
 
-def newstudent(last, first, stuyid, hr, id, email, c):
-    return {'last':last,
-            'first':first,
-            'stuyid':stuyid,
-            'hr':hr,
-            'id':id,
-            'email':email,
-            'password':'',
-            'classes':[c]
-            }
 
 class studentdb:
     """ 

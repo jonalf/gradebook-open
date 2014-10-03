@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from flask import Flask, request, render_template, url_for, redirect, session, make_response
+from flask import Flask, request, render_template, url_for, redirect, session, make_response, flash
 import urllib2,json
 import datetime
 import json
@@ -82,6 +82,7 @@ def pwreset():
 @app.route("/newpw", methods = ["POST", "GET"])
 @requireauth('/newpw')
 def newpw():
+    message = '<div class="redalert"><center>'
     if request.method == "GET":
         return redirect(url_for("login"))
     else:
@@ -90,12 +91,22 @@ def newpw():
         np1 = request.form['newpass1']
         np2 = request.form['newpass2']
 
-        print u
-        print op
-        print np1
-        print np2
-        
-        return ''
+        if np1 != np2:
+            flash('New Passwords do not match, Please Try Again')
+            return redirect( url_for("pwreset", usr = u) )
+
+        elif len(np1) < 6:
+            flash('Passwords must have at least 6 characters, Please Try Again')
+            return redirect( url_for("pwreset", usr = u) )
+            
+        elif user.authenticate( u, op ):
+            user.web_pw_reset( u, np1 )
+            return redirect( url_for("logout") )
+ 
+        else:
+            flash('Incorrect Password, Please Try Again')
+            return redirect( url_for("pwreset", usr = u) )
+
 
 #STUDENT LOGIN FUNCTIONS
 @app.route("/studentlogin", methods = ["POST", "GET"])

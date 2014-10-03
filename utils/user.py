@@ -96,7 +96,12 @@ def newPW():
 
     pw = hashlib.sha1( passw1 ).hexdigest()
     userCollection.update( {'uname':user}, { '$set' : { 'password' : pw } })
-    
+
+def web_pw_reset( uname, passw ):
+    connection = Connection()
+    userCollection = connection.gradebook2.users
+    pw = hashlib.sha1( passw ).hexdigest()
+    userCollection.update( {'uname':uname}, { '$set' : { 'password' : pw } })
 
 def authenticate( uname, passw ):
     connection = Connection()
