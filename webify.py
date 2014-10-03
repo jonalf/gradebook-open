@@ -11,7 +11,6 @@ def fixPosts( s ):
     fixed = fixed.replace("post('/", "post('/gradebook/")
     fixed = fixed.replace('action="/backuprestore', 'action="/gradebook/backuprestore') 
     fixed = fixed.replace('/classview', '/gradebook/classview')    
-    fixed = fixed.replace('/newpw', '/gradebook/newpw')    
     return fixed
 
 def fixPicLinks( s ):
@@ -28,6 +27,7 @@ def fixLinks( s ):
     fixed = fixed.replace('/login', '/gradebook/login')
     fixed = fixed.replace('/classview', '/gradebook/classview')    
     fixed = fixed.replace('/pwreset', '/gradebook/pwreset')    
+    fixed = fixed.replace('/newpw', '/gradebook/newpw')
     return fixed
 
 regFile = getFile('static/scripts.js')
