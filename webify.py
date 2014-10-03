@@ -35,7 +35,7 @@ f = open('static/scripts2.js', 'w')
 f.write(fixFile)
 f.close()
 
-templates = ['base.html', 'classview.html', 'login.html', 'selectclass.html']
+templates = ['base.html', 'classview.html', 'login.html', 'selectclass.html', 'pwreset.html']
 for t in templates:
     s = getFile('templates/' + t)
     newF = fixLinks( s )
