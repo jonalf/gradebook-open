@@ -26,6 +26,7 @@ def fixLinks( s ):
     fixed = fixed.replace('/static/bootstrap/css/bootstrap.min.css', '/gradebook/static/bootstrap/css/bootstrap.min.css')
     fixed = fixed.replace('/login', '/gradebook/login')
     fixed = fixed.replace('/classview', '/gradebook/classview')    
+    fixed = fixed.replace('/pwreset', '/gradebook/pwreset')    
     return fixed
 
 regFile = getFile('static/scripts.js')
