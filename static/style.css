@@ -248,3 +248,19 @@ td.report {
     font-weight: bold;
 } 
 
+
+.helplink {
+    color: #2a6496;
+    font-size: 125%;
+}
+
+/*
+li > a {
+    color: cornsilk;
+}
+
+li > a:hover {
+    color: white;
+    background-color: cadetblue;
+}
+*/

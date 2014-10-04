@@ -279,6 +279,8 @@ class db:
                 self.setAttendance(csp, term, s, 'X', date)
                 if date in a:
                     self.removeAttendance(csp, term, s, 'A', date)
+                if date in e:
+                    self.removeAttendance(csp, term, s, 'E', date)
                 if date in l:
                     self.removeAttendance(csp, term, s, 'L', date)
 

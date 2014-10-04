@@ -11,17 +11,157 @@
 
 {% block content %}
 
-<h2>Gradebook Help</h2>
-<ul>
-  <li>Getting Started</li>
-  <li>Selection Page</li>
-  <li>Classview Pages</li>
-  <li>Reports Pages</li>
-  <li>Backups</li>
-  <li>Changing Passwords</li>
-</ul>
+<div>
+  <h2>Gradebook Help</h2>
+  <ul>
+    <li><a href="#start" class="helplink">Getting Started</a></li>
+    <li><a href="#select" class="helplink">Selection Page</a></li>
+    <li><a href="#classview" class="helplink">Classview Pages</a></li>
+    <li><a href="#reports" class="helplink">Reports Pages</a></li>
+    <li><a href="#backups" class="helplink">Backups</a></li>
+    <li><a href="#resetpw" class="helplink">Changing Your Password</a></li>
+  </ul>
+</div>
+
+<div> 
+  <h3 id="start">Getting Started</h3>
+  <ul>
+    <li>
+      To log into gradebook, go to <a href="https://nibbler.stuy.edu/gradebook">https://nibbler.stuy.edu/gradebook</a>
+    </li>
+    <li>
+      Your browser may display a message stating that the page is untrusted or something along those lines. You may proceed anyway. The reason behind the message is that Gradebook uses what is called a self-signed certificate. This allows all information passed between Gradebook and your browser to be encrypted without having to pay an external company to validate the certificate on my end. If you have any concerns you may contact me.
+    </li>
+    <li>
+      You will be prompted to enter your username and password. If you do so incorrectly simply try again.
+    </li>
+  </ul>
+
+  <h3 id="select">Selction Page</h3>
+  <ul>
+    <li>
+      The top of the selection page will display the current term that you are working in. This will default to the current calendar term but will change if you select a class from a previous term.
+    </li>
+    <li>
+      The first drop-down menu will have a list of all the classes for the current term. Find the class and click <i>Select Current Class</i> to go to that class.
+    </li>
+    <li>
+      You can use the second drop-down menu to select a class from a previous term. Find the class you want and click <i>Select Old Class</i>.
+    </li>
+  </ul>
+
+  <h3 id="classview">Classview Pages</h3>
+  <ul>
+    <li>
+      After selecting a class, you will be taken to a page where you should see all your students in a grid. This is known as a <i>Classview</i> page. There are 6 different Classview modes. The active mode is always displayed at the top in the navigation bar. 
+    </li>
+    <li>
+      Below the navigation bar, you will always see the current class and selected term. There will also be a <i>?</i> button which will display a small help popup for the current mode.
+    </li>
+    <ul>
+      <li>
+	<h4>Attendance Mode</h4>
+	<ul>
+	  <li>
+	    This is the default Classview mode. Whenever you select a
+	    class from the select page or navbar, this will be the active mode.
+	  </li>
+	  <li>
+	    Here you will be able to view and edit the class attendance for a single day.
+	  </li>
+	  <li>
+	    Clicking on a student will cycle through a series of colors. Each color represents a different attendance mark:
+	    <ul>
+	      <li>
+		Red: Absent
+	      </li>
+	      <li>
+		Orange: Late
+	      </li>
+	      <li>
+		Green: Excused Absence
+	      </li>
+	      <li>
+		Blue: Excused Lateness
+	      </li>
+	      <li>
+		No Color: Present
+	      </li>
+	    </ul>
+	  </li>
+	  <li>
+	    Attendance marks will not be saved until you hit the <i>Save Attendance</i> button.
+	  </li>
+	  <li>
+	    You can save attendance 
+	  </li>
+	</ul>
+      </li>
+
+      <li>
+	<h4>Arrange Mode</h4>
+	<ul>
+	  <li>
+	  </li>
+	</ul>
+      </li>
+
+      <li>
+	<h4>Student Mode</h4>
+	<ul>
+	  <li>
+	  </li>
+	</ul>
+      </li>
+
+      <li>
+	<h4>Assignment Mode</h4>
+	<ul>
+	  <li>
+	  </li>
+	</ul>
+      </li>
+
+      <li>
+	<h4>Grades Mode</h4>
+	<ul>
+	  <li>
+	  </li>
+	</ul>
+      </li>
+
+      <li>
+	<h4>Participation Mode</h4>
+	<ul>
+	  <li>
+	  </li>
+	</ul>
+      </li>
+
+    </ul>
+    
+  </ul>
+
+  <h3 id="reports">Reports Pages</h3>
+  <ul>
+    <li>
+    </li>
+  </ul>
+
+  <h3 id="backups">Backups</h3>
+  <ul>
+    <li>
+    </li>
+  </ul>
+
+  <h3 id="resetpw">Changing Your Password</h3>
+  <ul>
+    <li>
+    </li>
+  </ul>
 
 
+</div>
 
 {% endblock %}
 
