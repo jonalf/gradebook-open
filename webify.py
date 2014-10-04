@@ -28,6 +28,7 @@ def fixLinks( s ):
     fixed = fixed.replace('/classview', '/gradebook/classview')    
     fixed = fixed.replace('/pwreset', '/gradebook/pwreset')    
     fixed = fixed.replace('/newpw', '/gradebook/newpw')
+   fixed = fixed.replace('/help', '/gradebook/help')
     return fixed
 
 regFile = getFile('static/scripts.js')
@@ -37,7 +38,7 @@ f = open('static/scripts2.js', 'w')
 f.write(fixFile)
 f.close()
 
-templates = ['base.html', 'classview.html', 'login.html', 'selectclass.html', 'pwreset.html']
+templates = ['base.html', 'classview.html', 'login.html', 'selectclass.html', 'pwreset.html', 'help.html']
 for t in templates:
     s = getFile('templates/' + t)
     newF = fixLinks( s )

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %} Select Class {% endblock %}
+
+{% block header %}
+	  <li><a href="/logout">Logout</a></li>
+	  <li><a href="/selectclass">Select</a></li>
+	  <li><a href="/help">Help</a></li>
+	  <li><a href="/pwreset">Change Password</a></li>
+{% endblock %}
+
+
+{% block content %}
+
+<h2>Gradebook Help</h2>
+<ul>
+  <li>Getting Started</li>
+  <li>Selection Page</li>
+  <li>Classview Pages</li>
+  <li>Reports Pages</li>
+  <li>Backups</li>
+  <li>Changing Passwords</li>
+</ul>
+
+
+
+{% endblock %}
+
+{% block footer %}
+<script src="/static/scripts.js"></script>
+<script>$(document).load(loadselect("{{trm}}"))</script>
+{% endblock %}
