@@ -929,6 +929,7 @@ function loadbackups(term) {
     html+= "<input type=\"submit\" name=\"Restore All\" value=\"Restore All\"></form>";
 
     $("#temp").remove();
+    $("#iface").remove();
     $("#help_button").remove();
     $("#student_table").empty();
     $("#student_table").append(html);
@@ -1200,10 +1201,10 @@ function addStudent() {
     }
     else {
         var html = "<table border=\"0\">"
-        html+= "<tr><td>First Name:</td><td><input type=\"text\" id=\"first\"></td></tr>";
-        html+= "<tr><td>Last Name:</td><td><input type=\"text\" id=\"last\"></td></tr>";
+        html+= "<tr><td>*First Name:</td><td><input type=\"text\" id=\"first\"></td></tr>";
+        html+= "<tr><td>*Last Name:</td><td><input type=\"text\" id=\"last\"></td></tr>";
         html+= "<tr><td>Nickname:</td><td><input type=\"text\" id=\"nick\"></td></tr>";
-        html+= '<tr><td>OSIS:</td><td><input type="text" pattern="[0-9]*" id="id"></td></tr>'
+        html+= '<tr><td>*OSIS:</td><td><input type="text" pattern="[0-9]*" id="id"></td></tr>'
         html+= '<tr><td>ID:</td><td><input type="text" pattern="[0-9]*" id="stuyid"></td></tr>'
         html+= '<tr><td>HR:</td><td><input type="text" pattern="[0-9]*" id="hr"></td></tr>'
         html+= "<tr><td>Email:</td><td><input type=\"text\" id=\"email\"></td></tr></table>";
@@ -1360,7 +1361,7 @@ function infoView() {
 function editInfo() {
     var html = "<table border=\"0\">"
     html+= "<tr><td>Nickname:</td><td><input type=\"text\" id=\"nick\" value=\"" + currentStudent['nick'] + "\"></td></tr>";
-    html+= '<tr><td>OSIS:</td><td><input type="text" pattern="[0-9]*" id="id" value="' + currentStudent['id'] + '"></td></tr>';
+    html+= '<tr><td>OSIS:</td><td><input type="text" pattern="[0-9]*" id="id" value="' + currentStudent['id'] + '" readonly></td></tr>';
     html+= '<tr><td>ID:</td><td><input type="text" pattern="[0-9]*" id="stuyid" value="' + currentStudent['stuyid'] + '"></td></tr>';
     html+= "<tr><td>HR:</td><td><input type=\"text\" id=\"hr\" value=\"" + currentStudent['hr'] + "\"></td></tr>";
     html+= "<tr><td>Email:</td><td><input type=\"text\" id=\"email\" value=\"" + currentStudent['email'] + "\"></td></tr>";
@@ -1398,7 +1399,7 @@ function attendanceView() {
 
     $('.modal-body').html(calendars)
 
-    var buttons = '<button class="btn btn-default mbutton" id="backbutton" onclick="studentInfo(' + currentStudent['id'] + ')">Back</button><button class="btn btn-info mbutton" type="button" onclick="changeAttendance(' + currentStudent["id"] + ')">Change Attendance</button>'
+    var buttons = '<button class="btn btn-default mbutton" id="backbutton" onclick="studentInfo(' + currentStudent['id'] + ')">Back</button><button class="btn btn-info mbutton" type="button" onclick="changeAttendance(' + currentStudent["id"] + ')">Save Attendance</button>'
  
     $('.modal-footer').append(buttons);
     

@@ -254,6 +254,12 @@ td.report {
     font-size: 125%;
 }
 
+.vidlink {
+    color: #2a6496;
+    font-size: 75%;
+}
+
+
 /*
 li > a {
     color: cornsilk;

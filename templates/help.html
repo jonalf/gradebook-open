@@ -17,6 +17,13 @@
     <li><a href="#start" class="helplink">Getting Started</a></li>
     <li><a href="#select" class="helplink">Selection Page</a></li>
     <li><a href="#classview" class="helplink">Classview Pages</a></li>
+    <ul>
+      <li><a href="#attendance" class="helplink">Attendance Mode</a></li>
+      <li><a href="#arrange" class="helplink">Arrange Mode</a></li>
+      <li><a href="#student" class="helplink">Student Mode</a></li>
+      <li><a href="#assignment" class="helplink">Assignment Mode</a></li>
+      <li><a href="#grades" class="helplink">Grades Mode</a></li>
+    </ul>
     <li><a href="#reports" class="helplink">Reports Pages</a></li>
     <li><a href="#backups" class="helplink">Backups</a></li>
     <li><a href="#resetpw" class="helplink">Changing Your Password</a></li>
@@ -24,7 +31,7 @@
 </div>
 
 <div> 
-  <h3 id="start">Getting Started</h3>
+  <h3 id="start">Getting Started <a class="vidlink" href="">video</a></h3>
   <ul>
     <li>
       To log into gradebook, go to <a href="https://nibbler.stuy.edu/gradebook">https://nibbler.stuy.edu/gradebook</a>
@@ -37,7 +44,7 @@
     </li>
   </ul>
 
-  <h3 id="select">Selction Page</h3>
+  <h3 id="select">Selction Page <a class="vidlink" href="">video</a></h3>
   <ul>
     <li>
       The top of the selection page will display the current term that you are working in. This will default to the current calendar term but will change if you select a class from a previous term.
@@ -60,7 +67,7 @@
     </li>
     <ul>
       <li>
-	<h4>Attendance Mode</h4>
+	<h4 id="attendance">Attendance Mode <a class="vidlink" href="">video</a></h4>
 	<ul>
 	  <li>
 	    This is the default Classview mode. Whenever you select a
@@ -84,56 +91,160 @@
 	      <li>
 		Blue: Excused Lateness
 	      </li>
-	      <li>
-		No Color: Present
-	      </li>
 	    </ul>
+	  </li>
+	  <li>
+	    Any student without a colored border will be considered present. Gradebook only saves absence/lateness data.
 	  </li>
 	  <li>
 	    Attendance marks will not be saved until you hit the <i>Save Attendance</i> button.
 	  </li>
 	  <li>
-	    You can save attendance 
+	    You can save attendance multiple times. If you change a student from absent (excused or not) to late (excused or not), the absence mark will be removed. If you change a student from a non-excused mark to an excused one, the non-excused mark will be removed.
+	  </li>
+	  <li>
+	    You cannot change a student from absent/late (excused or not) to present from this mode. You may do so through the Student Mode.
+	  </li>
+	  <li>
+	    Clicking <i>Pick Date</i> will bring up a small calendar. You can select any other date to view/edit the class attendance for that day.
 	  </li>
 	</ul>
       </li>
 
       <li>
-	<h4>Arrange Mode</h4>
+	<h4 id="arrange">Arrange Mode <a class="vidlink" href="">video</a></h4>
 	<ul>
 	  <li>
+	    This mode will allow you to reseat your class as well as add/remove rows or columns.
+	  </li>
+	  <li>
+	    The class must always be displayed as a grid, but you may use empty seats to create a non-grid based seating chart.
+	  </li>
+	  <li>
+	    Clicking on a student (or empty space) will highlight them in red. Clicking on a second student (or empty space) will swap positions between the two. Every seat swap is immediately saved.
+	  </li>
+	  <li>
+	    The <i>Resize</i> button will allow you to add/remove rows or columns to the seating chart. If you remove a row/column that has students in it, you will not be able to see them, but they will not have been removed. If you add back the row/column the students will appear again.
 	  </li>
 	</ul>
       </li>
 
       <li>
-	<h4>Student Mode</h4>
+	<h4 id="student">Student Mode <a class="vidlink" href="">video</a></h4>
 	<ul>
 	  <li>
+	    This mode will allow you to view/edit data about a particular student. You will have access to all attendance data, all assignment data as well as some personal information.
+	  </li>
+	  <li>
+	    The <i>Add Student</i> button will allow you to manually add a student to your class. You must include the student's first and last name and their OSIS. It is very important you enter their OSIS correctly, this will be their identification number for Gradebook.
+	  </li>
+	  <li>
+	    Clicking on a student will bring up a window with more options.
+	  </li>
+	  <li>
+	    The <i>Student Information</i> button will show you the student's name, nickname (if any), OSIS, 4-digit Stuy ID, homeroom and email address (if one is on file).
+	    <ul>
+	      <li>
+		Clicking on <i>Edit</i> will allow you to change any of these, excpet for the student's name and OSIS.
+	      </li>
+	      <li>
+		Nicknames will be displayed above the student's name in all Classview pages
+	      </li>
+	    </ul>
+	  <li>
+	    The <i>Student Attendance</i> button will display 4 caldenars. One each for absences, excused absences, latenesses and excused latenesses. You will aslo see the total number of each type next to the corresponding heading.
+	    <ul>
+	      <li>
+		Each date shaded in dark gray represents a mark of that type in the student's record. You can toggle individual days on or off by clicking on them.
+	      </li>  
+	      <li>
+		Clicking <i>Change Attendance</i> will save any changes you have made. This is the only way to mark a student present from any other mark by unselecting a day from any of the calendars.
+	      </li>		  	      
+	    </ul>	    
+	  </li>
+	  <li>
+	    The <i>Student Work</i> button will show you an overview of the student's grades for each assignment type you have saved (assignment types can be changed in the <i>Grades</i> mode).
+	  </li>
+	  <ul>
+	    <li>
+	      Clicking on <i>Full View</i> will allow you to see a detailed list of all the assignments for that type. You can see any missing or excused assignments, as well as each completed assignment and its grade.
+	    </li>
+	    <li>
+	      Clicking on an individual assignment will allow you to change its grade.
+	    </li>
+	  </ul>
+	  <li>
+	    Clicking <i>Remove Student</i> will remove the student from the current class. This is an irreversible action. Removing a student deletes all the information pertaining to that student.
+	  </li>
+	  <li>
+	    Clicking <i>Transfer Student</i> will allow you to transfer the student to another one of your current classes. If the seating layout for the new class does not have room, you will be asked to resize the layout for that class before you can transfer the student.
+	  </li>
+	</ul>
+
+      <li>
+	<h4 id="assignment">Assignment Mode <a class="vidlink" href="">video</a></h4>
+	<ul>
+	  <li>
+	    This mode will allow you to enter and modify grades for any assignment.
+	  </li>
+	  <li>
+	    Each student will have a box under their name where you can enter a grade. The grade must be a number or the letter <i>e</i> (case does not matter). If you enter e, then the student will be excused for that assignment and it will not factor into their total grade.
+	  </li>
+	  <li>
+	    On the right had side you will be able to enter an assignment name, the maximum points for the assignment and the default value (this will be applied if you don't enter a grade for a particular student). Make sure that the assignment name has not already been used for that class.
+	  </li>
+	  <li>
+	    You must also select what type of assignment you are entering by selecting it from the options below the default grade.
+	  </li>
+	  <li>
+	    Clicking <i>Save Grades</i> will save the grades and take you to the Grades mode Classview page.
+	  </li>
+	  <li>
+	    If an assignment has already been saved, clicking <i>Delete Assignment</i> will remove the current assignment from all records. This is an irreversible action.
+	  </li>
+	  <li>
+	    You will also see a dropdown menu that contains all saved assignments. Selecting an assignment from this menu and clicking <i>Change Assignment</i> will bring up all the information for that assignment. You can then change individual grades or the max points and save these changes (or delete the entire assignment).
 	  </li>
 	</ul>
       </li>
 
       <li>
-	<h4>Assignment Mode</h4>
+	<h4 id="grades">Grades Mode <a class="vidlink" href="">video</a></h4>
 	<ul>
 	  <li>
+	    This mode will display every student's current grade. You will also be able to add/remove assignment types, change the weights for each type and setup an option to drop the lowest test grade.
 	  </li>
+	  <li>
+	    If at any time the grades do not appear under each student, you can click <i>Change Weights</i>, this will refresh the view. Grades not displaying sometimes is a known bug and is being looked at.
+	  </li>
+	  <li>
+	    Any student getting a failing grade (below 65) will be highlighted in red. Any student with a grade between 75 and 65 will be highlighted in orange.
+	  </li>
+	  <li>
+	    On the right hand side of the window you will see each assignment type and the current weight assigned to that type. You can enter any weights you'd like, but make sure that the total of all weights is 1.0 (100%). Clicking <i>Change Weights</i> will change the weights to the entered values.
+	  </li>
+	  <li>
+	    The <i>More Options</i> button will allow you to drop the lowest test grade either by percentage or total points for all students. You can toggle this on or off. This will only effect grades in the <i>tests</i> category.
+	  </li>
+	  <li>
+	    <i>Add Assignment Type</i> will allow you to create a new assignment type. You will be promted for a name, just make sure it is not a name used for an existing assignment type.
+	  </li>
+	  <li>
+	    <i>Remove Assignment Type</i> will bring up a list of the current assignment types and allow you to remove one. This will remove all data for that assignment from the system, including student grades. This action is irreversible.
 	</ul>
       </li>
 
       <li>
-	<h4>Grades Mode</h4>
+	<h4>Participation Mode <a class="vidlink" href="">video</a></h4>
 	<ul>
 	  <li>
+	    This mode currently has no bearing on a student's grade. Nor does any of the information get saved. It is a work in progress.
 	  </li>
-	</ul>
-      </li>
-
-      <li>
-	<h4>Participation Mode</h4>
-	<ul>
 	  <li>
+	    <i>Random Student</i> will highlight a randomly selected student. It will cycle through all the students in a class before it picks another one.
+	  </li>
+	  <li>
+	    Each student has a  <i>+</i> and <i>-</i> button next to their name. Clik the + button to recognize good participation and the - number to recognize poor participation. Clicking <i>Weighted</i> will select a random student, but those with lower participation totals are more likely to be selected.
 	  </li>
 	</ul>
       </li>
@@ -142,21 +253,100 @@
     
   </ul>
 
-  <h3 id="reports">Reports Pages</h3>
+  <h3 id="reports">Reports Pages <a class="vidlink" href="">video</a></h3>
   <ul>
     <li>
+      Reports pages will display your students in an alphabetically sorted list in order to display certain information.
     </li>
+    <li>
+      There are 3 different Reports pages, the active page is always displayed in the top navigation bar.
+    </li>
+    <ul>
+
+      <li>
+	<h4>Today's Attendance</h4>
+	<ul>
+	  <li>
+	    A table will be displayed for each of your current classes. Each student will either have Absent, Late or nothing next to their name.
+	  </li>
+	  <li>
+	    You can view the attendance totals by entering a different date in the text box above the first class table and clicking on the <i>View Day</i> button. You can either type in the date  (format: mm-dd-yyyy), or select it from a calendar that will appear once you click in the text box.
+	  </li>
+	</ul>
+      </li>
+
+      <li>
+	<h4>Attendance Totals</h4>
+	<ul>
+	  <li>
+	    A table will be displayed for the current class only. It will contain all the students in that class and the total number of absences, latenesses, excused absences and excused latenesses for each.
+	  </li>
+	</ul>
+      </li>
+
+      <li>
+	<h4>Grades</h4>
+	<ul>
+	  <li>
+	    This page will only display the grades of the current class.
+	  </li>
+	  <li>
+	    The first table on this page shows the total percentage for each assignment type, the raw grade (calculated using the wieghts entered in the Grades Classview page) and then the grade rounded to the nearest multiple of 5 for grades less than 90 or the nearest integer for grades above 90. 
+	  </li>
+	  <li>
+	    Below the overall grade table will be a table for each assignment type that exists for the current class. Each table will display all the assignment grades for every student. 
+	  </li>
+	  <li>
+	    All the tables on this page will have the average and median values for each column of data below the last student's information.
+	  </li>
+	</ul>
+      </li>
+
+    </ul>
   </ul>
 
-  <h3 id="backups">Backups</h3>
+  <h3 id="backups">Backups <a class="vidlink" href="">video</a></h3>
   <ul>
+
     <li>
+      Each option on this page can be done for the current class only or for all classes in the selected term.
     </li>
+
+    <li>
+      <h4>Downloading a Backup File</h4>
+      <ul>
+	<li>
+	  You can either download a backup csv (comma separated value) file or a raw data backup file.
+	</li>
+	<li>
+	  A csv file can be opened in any spreadsheet application. The information will be in a similar format to the tables in the reports view.
+	</li>
+	<li>
+	  The raw data file should only be used in conjunction with the restore feature on this page.
+	</li>
+      </ul>
+   </li>
+
+    <li>
+      <h4>Restoring from a Backup</h4>
+      <ul>
+	<li>
+	  In the event that something happens to your class data, you can restore it from a previouly saved backup. To do so, select the appropriate backup file and click restore.
+	</li>
+	<li>
+	  You can only restore from a raw data backup file, not a csv backup file.
+	</li>
+      </ul>
+
   </ul>
 
-  <h3 id="resetpw">Changing Your Password</h3>
+  <h3 id="resetpw">Changing Your Password <a class="vidlink" href="">video</a></h3>
   <ul>
     <li>
+      In order to change your password, select <i>Change Password</i> from the navigation bar. You must enter your current password once and your new password twice.
+    </li>
+    <li>
+      All passwords must be at least 6 characters long.
     </li>
   </ul>
 
