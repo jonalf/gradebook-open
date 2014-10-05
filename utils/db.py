@@ -840,6 +840,11 @@ class db:
         for s in students:
             lineparts = [ s['last'], s['first'], s['id'] ] + s['excused']
             backup+= ','.join(lineparts) + '\n'
+        backup+= '\nAttendance Data: Excused Late\n'
+        backup+= 'Last,First,ID\n'
+        for s in students:
+            lineparts = [ s['last'], s['first'], s['id'] ] + s['exlate']
+            backup+= ','.join(lineparts) + '\n'
         
         for atype in target['assignments']:
             lineparts = []
