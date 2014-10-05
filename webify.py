@@ -28,7 +28,7 @@ def fixLinks( s ):
     fixed = fixed.replace('/classview', '/gradebook/classview')    
     fixed = fixed.replace('/pwreset', '/gradebook/pwreset')    
     fixed = fixed.replace('/newpw', '/gradebook/newpw')
-   fixed = fixed.replace('/help', '/gradebook/help')
+    fixed = fixed.replace('/help', '/gradebook/help')
     return fixed
 
 regFile = getFile('static/scripts.js')
