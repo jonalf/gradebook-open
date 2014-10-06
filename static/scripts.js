@@ -1150,12 +1150,12 @@ function newSize() {
     var html = '<form class="form-horizontal">'
 
     html+= '<div class="form-group"><label for="rows" class="col-sm-4" control-label>Rows</label><div class="col-sm-8"><select id="rows" class="form-control">'
-    for (var i=1; i <= 10; i++)
+    for (var i=1; i <= 12; i++)
         html+= '<option value="' + i + '">' + i + '</option>'
     html+= '</select></div></div>'
 
     html+= '<div class="form-group"><label for="cols" class="col-sm-4" control-label>Cols</label><div class="col-sm-8"><select id="cols" class="form-control">'
-    for (var i=1; i <= 10; i++)
+    for (var i=1; i <= 12; i++)
         html+= '<option value="' + i + '">' + i + '</option>'
     html+= '</select></div></div></form>'
     
