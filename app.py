@@ -162,6 +162,7 @@ def studentpwset():
             return render_template("studentlogin.html", user = u, message = 'Your password has been set, please login below.')
 
 @app.route('/studentview')
+@requireauth( 'studentview' )
 def studentview():
     return render_template("studentview.html", user=session['user'])
     

@@ -131,7 +131,9 @@ def requireauth(page):
     def decorator(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
-            if 'user' not in session:
+            if 'user' not in session and page == 'studentview':
+                return redirect( url_for('studentlogin'))
+            elif 'user' not in session:
                 return redirect( url_for('login'))
             else:
                 return f(*args, **kwargs)

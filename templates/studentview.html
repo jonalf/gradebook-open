@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %} Select Class {% endblock %}
+
+{% block header %}
+	  <li><a href="/studentlogout">Logout</a></li>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <div class="jumbotron">
+    <center>
+      <h2 id="sname"></h2>
+      <h3>OSIS: {{ user }} </h3>
+    </center>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<script src="/static/student_scripts.js"></script>
+<script>$(document).load( loadStudent() )</script>
+{% endblock %}
