@@ -19,10 +19,10 @@ var loadGrades = function() {
 	       var c = eval("(" + data + ")" );	       
 	       s = '';
 	       for  ( classn in c ) {
-		   s+= classn + 'br';
+		   s+= '<h3>' + classn + '</h3>';
 		
 		   for (type in c[ classn ]) {
-		       s+= '<h3>' + type + '</h3>';
+		       s+= '<h4>' + type + '</h4>';
 		       s+= '<table class="report"><tr class="report1"><th>name</th><th>max</th><th>earned</th></tr>'
 		       for (var i=0; i <  c[classn][type].length; i++ ) {
 			   

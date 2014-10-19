@@ -9,6 +9,8 @@ T_NUMBER = 1
 T_STRING = 2
 T_DICTIONARY = 3
 
+TEST_CLASSES = [ 'FUNTIME', 'MKS65C' ]
+
 def newstudent(last, first, stuyid, hr, id, email, c):
     return {'last':last,
             'first':first,
@@ -107,7 +109,9 @@ class studentdb:
         student = self.getStudent( id )
 
         for c in student['classes']:
-            grades['-'.join(c)] = classdb.getStudent( c, term, id )['students'][0]['assignments']
+            print c
+            if c[0] in TEST_CLASSES:
+                grades['-'.join(c)] = classdb.getStudent( c, term, id )['students'][0]['assignments']
         return grades
 
     def setPassword( self, id, pw ):
