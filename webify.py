@@ -33,8 +33,8 @@ def fixLinks( s ):
 
 def fixStudentLinks( s ):
     fixed = s.replace('/studentpwset', '/gradebook/studentpwset')
-    fixed = s.replace('/studentlogin', '/gradebook/studentlogin')
-    fixed = s.replace('/studentlogout', '/gradebook/studentlogout')
+    fixed = fixed.replace('/studentlogin', '/gradebook/studentlogin')
+    fixed = fixed.replace('/studentlogout', '/gradebook/studentlogout')
     return fixed
 
 def fixStudentPosts( s ):
