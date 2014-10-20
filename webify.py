@@ -35,9 +35,11 @@ def fixStudentLinks( s ):
     fixed = s.replace('/studentpwset', '/gradebook/studentpwset')
     fixed = s.replace('/studentlogin', '/gradebook/studentlogin')
     fixed = s.replace('/studentlogout', '/gradebook/studentlogout')
+    return fixed
 
 def fixStudentPosts( s ):
     fixed = s.replace('post("/', 'post("/gradebook/')
+    return fixed
 
 regFile = getFile('static/scripts.js')
 fixFile = fixPosts( regFile )
