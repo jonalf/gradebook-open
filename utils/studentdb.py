@@ -86,7 +86,7 @@ class studentdb:
 
     def addClassToList(self, id, classname):
         self.db.students.update( {'id':id},
-                                 {'$push' : {'$.classes':classname}})
+                                 {'$push' : {'classes':classname}})
 
     def removeStudent(self, id):
         self.db.students.remove( { 'id':id } ) 
