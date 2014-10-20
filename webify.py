@@ -31,6 +31,14 @@ def fixLinks( s ):
     fixed = fixed.replace('/help', '/gradebook/help')
     return fixed
 
+def fixStudentLinks( s ):
+    fixed = s.replace('/studentpwset', '/gradebook/studentpwset')
+    fixed = s.replace('/studentlogin', '/gradebook/studentlogin')
+    fixed = s.replace('/studentlogout', '/gradebook/studentlogout')
+
+def fixStudentPosts( s ):
+    fixed = s.replace('post("/', 'post("/gradebook/')
+
 regFile = getFile('static/scripts.js')
 fixFile = fixPosts( regFile )
 fixFile = fixPicLinks( fixFile )
@@ -42,6 +50,21 @@ templates = ['base.html', 'classview.html', 'login.html', 'selectclass.html', 'p
 for t in templates:
     s = getFile('templates/' + t)
     newF = fixLinks( s )
+    f = open('templates/' + t, 'w')
+    f.write( newF )
+    f.close()
+
+#fix student page versions
+regFile = getFile('static/student_scripts.js')
+fixFile = fixStudentPosts( regFile )
+f = open('static/student_scripts.js', 'w')
+f.write(fixFile)
+f.close()
+
+templates = ['studentlogin.html', 'studentpwset.html', 'studentview.html' ]
+for t in templates:
+    s = getFile('templates/' + t)
+    newF = fixStudentLinks( s )
     f = open('templates/' + t, 'w')
     f.write( newF )
     f.close()
