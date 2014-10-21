@@ -40,7 +40,7 @@ var loadGrades = function() {
 		   }
 	       }
 
-	       jumbo = document.querySelectorAll('.jumbotron')[0];
+	       jumbo = document.querySelectorAll('#gradetables')[0];
 	       	       
 	       jumbo.innerHTML += s;
 	   });    
