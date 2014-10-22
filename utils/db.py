@@ -70,7 +70,9 @@ def newstudent2(first, last, nick, stuyid, hr, id, email, row, col):
 def newassignment(name, points, maxp):
     return { 'name': name,
              'points': points,
-             'max' : maxp
+             'max' : maxp,
+             #new
+             'public' : 0
              }
 
 def newweights(types, weights):
@@ -688,6 +690,7 @@ class db:
                                 'term':term},
                                {'$set' : { 'students' : students } })
 
+
     def addClassField(self, fname, ftype, dKeyNames=[], dVal=0):
 
         if ftype == T_ARRAY:
@@ -739,6 +742,72 @@ class db:
                                     'term':term,
                                     'students.id':s['id']},
                                    {'$set' : {'students.$.'+fname:field}})
+
+
+    #WORK IN PROGRESS
+    def addAssignmentField(self):
+        teachers = self.getTeachers()
+        for t in teachers:
+            classes = self.getAllClasses(t)
+            terms = classes['terms']            
+            for t in terms:
+                if t != 'terms' and t == '2014-fall':
+                    for c in classes[t]:
+                        self.addFieldToAssignments(c, t)
+
+
+    def addFieldToAssignments(self, csp, term ):
+        students = self.getStudents(csp, term)
+        
+        print `csp`
+        #Get the assignment dictionary for the class
+        ass = self.db.classes.find_one({'code':csp[0],
+                                        'section':csp[1],
+                                        'period':csp[2],
+                                        'term':term },
+                                        { "assignments" : 1 , "_id" : 0 } )
+
+        #add public to each assignment
+        ass = ass['assignments']
+        for atype in ass:
+
+            for a in ass[atype]:
+                a['public'] = 0;
+
+        #replace the old assignment dictionary with the updated one
+        self.db.classes.update({'code':csp[0],
+                                'section':csp[1],
+                                'period':csp[2],
+                                'term':term },
+                               { "$set" : {  "assignments" : ass } })
+
+
+        
+        #add field to each students' assignment dictionary
+        for s in students:
+            #get the assignment dictionary for a student
+            ass = self.db.classes.find_one({'code':csp[0],
+                                          'section':csp[1],
+                                          'period':csp[2],
+                                          'term':term,
+                                          'students.id':s['id']},
+                                         { "assignments" : 1 , "_id" : 0 } )
+            #add the field to each entry
+            ass = ass['assignments']
+            for atype in ass:
+
+                for a in ass[atype]:
+                    a['public'] = 0;
+                    
+            #replace the old assignment dictionary with the updated one
+            self.db.classes.update({'code':csp[0],
+                                    'section':csp[1],
+                                    'period':csp[2],
+                                    'term':term,
+                                    'students.id':s['id']},
+                                   { "$set" : { "assignments" : ass } } )
+            
+    #END WORK IN PROGRESS
         
 
     def getTodaysAttendance(self, csp, term, date, mode):
