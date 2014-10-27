@@ -181,7 +181,7 @@ function loadclass( clsname, term, mode ) {
 		   html+= '<input class="form-control input-sm" type="text" pattern="[0-9]*" placeholder="Max Points" id="amax">'
 		   html+= '<input type="text" class="form-control input-sm" pattern="[0-9]*" placeholder="Default Points" id="adefault"><br>'
 		   html+= loadAssignmentTypes( Object.keys(c['assignments']), 'radio')
-		   html+= '<br><input type="checkbox" name="public" value="public">Allow students to view these grades<br>'
+		   html+= '<br><input type="checkbox" name="public" value="public" id="apublic">Allow students to view these grades<br>'
 		   html+= '<br><button class="btn btn-info btn-block" id="action_buton" onclick="saveGrades()">Save Grades</button><br><button class="btn btn-warning btn-block" id="adelete" onclick="deleteAssignment()">Delete Assignment</button></div><hr>'
 		   html+= '<select class="form-control" id="aselection"></select><br><button class="btn btn-info btn-block" id="apick" onclick="changeAssignment()">Change Assignment</button><br></div>'
 		   $("#iface").html(html);
@@ -1584,11 +1584,13 @@ function saveGrades() {
                 grades[this.id] = g;
             }
         });
+
     $.post("/savegrades", { classname:currentClass,
 			    term:selectedTerm,
 			    grades:JSON.stringify(grades),
 			    aname:$("#aname").val(),
-			    atype:$("[type=radio]:checked").val(), 
+			    atype:$("[type=radio]:checked").val(),
+			    apublic:$("#apublic").is(":checked"),
 			    points:parseFloat($("#amax").val())},
            function(data, status) {
                loadclass( currentClass, selectedTerm, M_GRADES);
@@ -1618,6 +1620,13 @@ function changeAssignment() {
 	       $('#adefault').val( '0' )
 	       var t = 'a' + c['type'];
 	       $('#' + t).prop('checked', true);
+	       
+	       console.log ( c['public'] );
+
+	       if ( c['public'] == 1 ) 
+		   $('#apublic').attr('checked', true);
+	       else
+		   $('#apublic').attr('checked', false);
 
 	       for(var i=0; i < c['grades'].length; i++) {
 		   s = c['grades'][i]

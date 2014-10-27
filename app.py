@@ -575,9 +575,11 @@ def savegrades():
     mydb = db.db()
     if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
         return 'false'
+
     mydb.setMassGrades( (nameParts[0], nameParts[1], nameParts[2] ),
                         term,
                         request.form['aname'], request.form['atype'], 
+                        request.form['apublic'],
                         float(request.form['points']), g);
     return "done"
 
