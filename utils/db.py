@@ -445,6 +445,7 @@ class db:
                                  'period':csp[2],
                                  'term':term},
                                 {'$push': { 'assignments.'+atype: newassignment2(aname,maxpoints, maxpoints, apublic)}})
+
         for i in grades.keys():
             self.db.classes.update( {'code':csp[0],
                                      'section':csp[1],
@@ -452,7 +453,7 @@ class db:
                                      'term':term,
                                      'students.id':i},
                                     {'$push':{('students.$.assignments.'+atype):
-                                              newassignment(aname, grades[i], maxpoints)}})
+                                              newassignment2(aname, grades[i], maxpoints, apublic)}})
 
     def deleteAssignment(self, csp, term, ids, aname, atype):
         self.db.classes.update( {'code':csp[0],
