@@ -110,17 +110,17 @@ class studentdb:
 
         for c in student['classes']:
             print c
-            if c[0] in TEST_CLASSES:
-                cname = '-'.join(c)
-                grades[cname] = {};
-                stud = classdb.getStudent( c, term, id )['students'][0]['assignments']
-                print stud
+            #if c[0] in TEST_CLASSES:
+            cname = '-'.join(c)
+            grades[cname] = {};
+            stud = classdb.getStudent( c, term, id )['students'][0]['assignments']
+            print stud
                 
-                for atype in stud:
-                    grades[cname][atype] = []
-                    for ass in stud[ atype ]:
-                        if ass['public'] == 1:
-                            grades[cname][atype]+= [ass]
+            for atype in stud:
+                grades[cname][atype] = []
+                for ass in stud[ atype ]:
+                    if ass['public'] == 1:
+                        grades[cname][atype]+= [ass]
 
         return grades
 
