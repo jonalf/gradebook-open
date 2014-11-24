@@ -109,19 +109,21 @@ class studentdb:
         student = self.getStudent( id )
 
         for c in student['classes']:
-            print c
             #if c[0] in TEST_CLASSES:
             cname = '-'.join(c)
-            grades[cname] = {};
+            temp_grades = {}
             stud = classdb.getStudent( c, term, id )['students'][0]['assignments']
-            print stud
                 
             for atype in stud:
-                grades[cname][atype] = []
+                temp_list = []                
                 for ass in stud[ atype ]:
                     if ass['public'] == 1:
-                        grades[cname][atype]+= [ass]
-
+                        temp_list += [ass]
+                if len(temp_list) > 0:
+                    temp_grades[atype] = temp_list                    
+                    
+            if len(temp_grades) > 0:
+                grades[cname] = temp_grades        
         return grades
 
     def setPassword( self, id, pw ):
