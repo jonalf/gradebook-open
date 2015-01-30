@@ -130,6 +130,10 @@ class studentdb:
         self.db.students.update( {'id':id}, 
                                  {'$set': {'password': pw}} )
     
+    def clearPassword( self, id ):
+        setPassword( id, '' )
+    
+        
     def isPasswordSet(self, id):
         student = self.getStudent(id)
         return not student['password'] == ''
