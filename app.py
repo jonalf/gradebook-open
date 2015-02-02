@@ -14,7 +14,7 @@ if gethostname() == 'nibbler':
 else:
     userfile = 'data/gbusers'
 
-CURRENT_TERM = '2014-fall'
+CURRENT_TERM = '2015-spring'
 
 app = Flask(__name__)
 app.secret_key = open('/dev/random', 'rb').read(32)
