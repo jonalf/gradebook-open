@@ -33,8 +33,8 @@ def login():
         return render_template("login.html")
     else:
         if 'user' in request.form:
-            u = request.form['user']
-            p = request.form['pass']
+            u = request.form['user'].strip()
+            p = request.form['pass'].strip()
         else:
             u = 'anon'
         if u not in user.getUserList(): #userdic.keys():
@@ -92,10 +92,10 @@ def newpw():
     if request.method == "GET":
         return redirect(url_for("login"))
     else:
-        u = request.form['user']
-        op = request.form['oldpass']
-        np1 = request.form['newpass1']
-        np2 = request.form['newpass2']
+        u = request.form['user'].strip()
+        op = request.form['oldpass'].strip()
+        np1 = request.form['newpass1'].strip()
+        np2 = request.form['newpass2'].strip()
 
         if np1 != np2:
             flash('New Passwords do not match, Please Try Again')
@@ -121,8 +121,8 @@ def studentlogin():
         return render_template("studentlogin.html")
     else:
         if 'user' in request.form:
-            u = request.form['user']
-            p = request.form['pass']
+            u = request.form['user'].strip()
+            p = request.form['pass'].strip()
         else:
             u = 'anon'
         
@@ -148,9 +148,9 @@ def studentpwset():
     if request.method == 'GET':
         return render_template("studentpwset.html")
     else:
-        u = request.form['user']
-        p = request.form['pass']
-        p2 = request.form['pass2']
+        u = request.form['user'].strip()
+        p = request.form['pass'].strip()
+        p2 = request.form['pass2'].strip()
 
         if p == '' or p2 == '':
             return render_template("studentpwset.html", user = u, message = 'Please enter a password into both boxes below')
@@ -194,12 +194,12 @@ def studentgradeload():
 @requireauth('classview')
 def classview():
     if request.method == 'POST':
-        term = request.form['term']
+        term = request.form['term'].strip()
     else:
         term = request.args.get('term')
     if term == 'other':
         try:
-            c = request.form["classname"]
+            c = request.form["classname"].strip()
             c = c.split(' ')
             cls = c[1]
             term = c[0]
@@ -207,7 +207,7 @@ def classview():
             return redirect( url_for('selectclass'))
     else:
         if request.method == 'POST':
-            cls = request.form["classname"]
+            cls = request.form["classname"].strip()
         else:
             cls = request.args.get('classname')
         print cls
@@ -220,8 +220,8 @@ def classview():
 @app.route("/loadclass", methods = ["POST"])
 @requireauth('loadclass')
 def loadclass():
-    clsn = request.form["classname"]
-    term = request.form['term']
+    clsn = request.form["classname"].strip()
+    term = request.form['term'].strip()
     nameParts = clsn.split("-")
     mydb = db.db()
     if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
@@ -231,7 +231,7 @@ def loadclass():
     cls = mydb.getClass( (nameParts[0], nameParts[1], nameParts[2] ), term )
     try:
         mydb.resizeClass( (nameParts[0], nameParts[1], nameParts[2] ),
-                          term, request.form["rows"], request.form["cols"])
+                          term, request.form["rows"].strip(), request.form["cols"].strip())
     except KeyError:
         pass
     return json.dumps( cls[0] )
@@ -239,15 +239,15 @@ def loadclass():
 @app.route("/seated", methods=["POST"])
 @requireauth('seated')
 def seated():
-    clsn = request.form["classname"]
-    term = request.form['term']
+    clsn = request.form["classname"].strip()
+    term = request.form['term'].strip()
     nameParts = clsn.split("-")
     mydb = db.db()
     if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
         return 'false'
     mydb.setSeated( (nameParts[0], nameParts[1], nameParts[2]), term,
-                  request.form["seated"],
-                  request.form['rows'], request.form['cols'])
+                  request.form["seated"].strip(),
+                  request.form['rows'].strip(), request.form['cols'].strip())
     return "seated set"
 
 @app.route("/validip", methods = ["POST"])
@@ -360,26 +360,26 @@ def backupallreset():
 @app.route("/saveattendance", methods=["POST"])
 @requireauth('saveattendance')
 def saveattendance():
-    clsn = request.form["classname"]
-    term = request.form['term']
+    clsn = request.form["classname"].strip()
+    term = request.form['term'].strip()
     nameParts = clsn.split("-")
     if request.form['absent'] != '':
-        abss = request.form['absent'].split('_')
+        abss = request.form['absent'].strip().split('_')
     else:
         abss = []
     if request.form['late'] != '':
-        lats = request.form['late'].split('_')
+        lats = request.form['late'].strip().split('_')
     else:
         lats = []
     if request.form['excused'] != '':
-        excs = request.form['excused'].split('_')
+        excs = request.form['excused'].strip().split('_')
     else:
         excs = []
     if request.form['exlates'] != '':
-        exlates = request.form['exlates'].split('_')
+        exlates = request.form['exlates'].strip().split('_')
     else:
         exlates = []
-    date = request.form['date']
+    date = request.form['date'].strip()
     mydb = db.db()
     if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
         return 'false'
@@ -390,16 +390,16 @@ def saveattendance():
 @app.route("/gettoday", methods=["POST"])
 @requireauth('gettoday')
 def gettoday():
-    clsn = request.form["classname"]
-    term = request.form['term']
+    clsn = request.form["classname"].strip()
+    term = request.form['term'].strip()
     nameParts = clsn.split("-")
     mydb = db.db()
     if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
         return 'false'
-    a = mydb.getTodaysAttendance((nameParts[0], nameParts[1], nameParts[2]), term, request.form['date'], 'absent')
-    l = mydb.getTodaysAttendance((nameParts[0], nameParts[1], nameParts[2]), term, request.form['date'], 'late')
-    e = mydb.getTodaysAttendance((nameParts[0], nameParts[1], nameParts[2]), term, request.form['date'], 'excused')
-    el = mydb.getTodaysAttendance((nameParts[0], nameParts[1], nameParts[2]), term, request.form['date'], 'exlate')
+    a = mydb.getTodaysAttendance((nameParts[0], nameParts[1], nameParts[2]), term, request.form['date'].strip(), 'absent')
+    l = mydb.getTodaysAttendance((nameParts[0], nameParts[1], nameParts[2]), term, request.form['date'].strip(), 'late')
+    e = mydb.getTodaysAttendance((nameParts[0], nameParts[1], nameParts[2]), term, request.form['date'].strip(), 'excused')
+    el = mydb.getTodaysAttendance((nameParts[0], nameParts[1], nameParts[2]), term, request.form['date'].strip(), 'exlate')
     d = {'absent':a, 'late':l, 'excused':e, 'exlate':el}
     return json.dumps(d)
 #=============================================
@@ -408,15 +408,15 @@ def gettoday():
 @app.route("/reseat", methods=["POST"])
 @requireauth('reseat')
 def reseat():
-    clsn = request.form["classname"]
-    term = request.form['term']
+    clsn = request.form["classname"].strip()
+    term = request.form['term'].strip()
     nameParts = clsn.split("-")
-    id1 = request.form["id1"]
-    row1= request.form["row1"]
-    col1 = request.form["col1"]
-    id2 = request.form["id2"]
-    row2= request.form["row2"]
-    col2 = request.form["col2"]
+    id1 = request.form["id1"].strip()
+    row1= request.form["row1"].strip()
+    col1 = request.form["col1"].strip()
+    id2 = request.form["id2"].strip()
+    row2= request.form["row2"].strip()
+    col2 = request.form["col2"].strip()
     mydb = db.db()
     if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
         return 'false'
@@ -429,15 +429,15 @@ def reseat():
 @app.route("/setseat", methods=["POST"])
 @requireauth('setseat')
 def setseat():
-    clsn = request.form["classname"]
-    term = request.form['term']
+    clsn = request.form["classname"].strip()
+    term = request.form['term'].strip()
     nameParts = clsn.split("-")
     mydb = db.db()
     if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
         return 'false'
     mydb.setSeat( (nameParts[0], nameParts[1], nameParts[2] ), term,
-                  request.form['sid'], 
-                  request.form['row'], request.form['col'])
+                  request.form['sid'].strip(), 
+                  request.form['row'].strip(), request.form['col'].strip())
     return "done"
 #=============================================
 
@@ -445,25 +445,25 @@ def setseat():
 @app.route('/addstudent', methods=["POST"])
 @requireauth('addstudent')
 def addstudent():
-    clsn = request.form["classname"]
-    term = request.form['term']
+    clsn = request.form["classname"].strip()
+    term = request.form['term'].strip()
     nameParts = clsn.split("-")
     mydb = db.db()
     if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
         return 'false'
     mydb.addStudent( (nameParts[0], nameParts[1], nameParts[2] ),term,
-                     request.form['first'], request.form['last'],
-                     request.form['nick'], request.form['sid'], 
-                     request.form['email'], int(request.form['row']),
-                     int(request.form['col'] ), request.form['stuyid'],
-                     request.form['hr']);
+                     request.form['first'].strip(), request.form['last'].strip(),
+                     request.form['nick'].strip(), request.form['sid'].strip(), 
+                     request.form['email'].strip(), int(request.form['row'].strip()),
+                     int(request.form['col'].strip() ), request.form['stuyid'].strip(),
+                     request.form['hr'].strip());
     return "done"
 
 @app.route('/getinfo', methods=["POST"])
 @requireauth('getinfo')    
 def getinfo(): 
-    clsn = request.form["classname"]
-    term = request.form['term']
+    clsn = request.form["classname"].strip()
+    term = request.form['term'].strip()
     nameParts = clsn.split("-")
     mydb = db.db()
     if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
@@ -474,23 +474,23 @@ def getinfo():
 @app.route('/removestudent', methods=["POST"])
 @requireauth('removestudent')
 def removestudent():
-    clsn = request.form["classname"]
-    term = request.form['term']
+    clsn = request.form["classname"].strip()
+    term = request.form['term'].strip()
     nameParts = clsn.split("-")
     mydb = db.db()
     if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
         return 'false'
     mydb.removeStudent((nameParts[0], nameParts[1], nameParts[2]),term,
-                        request.form['sid'])
+                        request.form['sid'].strip())
     return "done"
                                         
 @app.route("/transferstudent", methods=["POST"])
 @requireauth('transferstudent')
 def transferstudent():
-    clsn = request.form["classname"]
-    term = request.form['term']
+    clsn = request.form["classname"].strip()
+    term = request.form['term'].strip()
     nameParts = clsn.split("-")
-    targetClsn = request.form['targetclass']
+    targetClsn = request.form['targetclass'].strip()
     targetParts = targetClsn.split('-')
     mydb = db.db()
     if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
@@ -499,7 +499,7 @@ def transferstudent():
     if spot:
         mydb.transfer((nameParts[0],nameParts[1],nameParts[2]),
                       (targetParts[0],targetParts[1],targetParts[2]),
-                      term, request.form['sid'])
+                      term, request.form['sid'].strip())
         return "done"
     else:
         return "false"
@@ -509,30 +509,30 @@ def transferstudent():
 @requireauth('saveinfo')
 def saveinfo():
     print request.form
-    clsn = request.form["classname"]
-    term = request.form['term']
+    clsn = request.form["classname"].strip()
+    term = request.form['term'].strip()
     nameParts = clsn.split("-")
     mydb = db.db()
     if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
         return 'false'
     student = mydb.saveInfo((nameParts[0], nameParts[1], nameParts[2]),
                             term,
-                            request.form['sid'], request.form['nick'],
-                            request.form['id'], request.form['email'],
-                            request.form['stuyid'], request.form['hr'])
+                            request.form['sid'].strip(), request.form['nick'].strip(),
+                            request.form['id'].strip(), request.form['email'].strip(),
+                            request.form['stuyid'].strip(), request.form['hr'].strip())
     return json.dumps(student['students'])
 
 # ATTENDANCE VIEW
 @app.route("/changeattendance", methods=["POST"])
 @requireauth("changeattendance")
 def changeAttendance():
-    clsn = request.form["classname"]
-    term = request.form['term']
+    clsn = request.form["classname"].strip()
+    term = request.form['term'].strip()
     nameParts = clsn.split("-")
-    a = request.form['absent'].split('_')
-    l = request.form['late'].split('_')
-    e = request.form['excused'].split('_')
-    el = request.form['exlate'].split('_')
+    a = request.form['absent'].strip().split('_')
+    l = request.form['late'].strip().split('_')
+    e = request.form['excused'].strip().split('_')
+    el = request.form['exlate'].strip().split('_')
     if a[0] == '':
         a = []
     if l[0] == '':
@@ -545,21 +545,21 @@ def changeAttendance():
     if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
         return 'false'
     mydb.changeAllAttendance((nameParts[0], nameParts[1], nameParts[2]),
-                             term, request.form['sid'], a, l, e, el)
+                             term, request.form['sid'].strip(), a, l, e, el)
     return "done"
 
 #WORK VIEW
 @app.route('/changegrade', methods=["POST"])
 @requireauth('changegrade')
 def changegrade():
-    clsn = request.form["classname"]
-    term = request.form['term']
+    clsn = request.form["classname"].strip()
+    term = request.form['term'].strip()
     nameParts = clsn.split("-")
-    grades = json.loads(request.form['grades'])
+    grades = json.loads(request.form['grades'].strip())
     mydb = db.db()
     if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
         return 'false'
-    student = mydb.changeGrade((nameParts[0], nameParts[1], nameParts[2] ), term, request.form['sid'], request.form['atype'], grades)
+    student = mydb.changeGrade((nameParts[0], nameParts[1], nameParts[2] ), term, request.form['sid'].strip(), request.form['atype'].strip(), grades)
     return json.dumps(student['students'])
 #=============================================
 
@@ -568,26 +568,26 @@ def changegrade():
 @app.route('/savegrades', methods=["POST"])
 @requireauth('savegrades')
 def savegrades():
-    clsn = request.form["classname"]
-    term = request.form['term']
+    clsn = request.form["classname"].strip()
+    term = request.form['term'].strip()
     nameParts = clsn.split("-")
-    g = json.loads(request.form['grades'])
+    g = json.loads(request.form['grades'].strip())
     mydb = db.db()
     if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
         return 'false'
 
     mydb.setMassGrades( (nameParts[0], nameParts[1], nameParts[2] ),
                         term,
-                        request.form['aname'], request.form['atype'], 
-                        request.form['apublic'],
-                        float(request.form['points']), g);
+                        request.form['aname'].strip(), request.form['atype'].strip(), 
+                        request.form['apublic'].strip(),
+                        float(request.form['points'].strip()), g);
     return "done"
 
 @app.route('/getassignments', methods=["POST"])
 @requireauth('getassignments')
 def getassignments():
-    clsn = request.form["classname"]
-    term = request.form['term']
+    clsn = request.form["classname"].strip()
+    term = request.form['term'].strip()
     nameParts = clsn.split("-")
     mydb = db.db()
     if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
@@ -598,15 +598,15 @@ def getassignments():
 @app.route('/getassignment', methods=["POST"])
 @requireauth('getassignment')
 def getassignment():
-    clsn = request.form["classname"]
-    term = request.form['term']
+    clsn = request.form["classname"].strip()
+    term = request.form['term'].strip()
     nameParts = clsn.split("-")
     mydb = db.db()
     if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
         return 'false'
     try:
         assignment = mydb.getAssignment((nameParts[0],nameParts[1],nameParts[2]), term,
-                                     request.form['aname'])
+                                     request.form['aname'].strip())
         return json.dumps( assignment )
     except:
         return '{"grades":[]}'
@@ -614,8 +614,8 @@ def getassignment():
 @app.route('/deletegrades', methods=["POST"])
 @requireauth('deletegrades')
 def deletegrades():
-    clsn = request.form["classname"]
-    term = request.form['term']
+    clsn = request.form["classname"].strip()
+    term = request.form['term'].strip()
     nameParts = clsn.split("-")
     ids = json.loads(request.form['ids'])
     mydb = db.db()
@@ -624,7 +624,7 @@ def deletegrades():
     print ids
     mydb.deleteAssignment( (nameParts[0], nameParts[1], nameParts[2] ),
                            term, ids,
-                           request.form['aname'], request.form['atype']); 
+                           request.form['aname'].strip(), request.form['atype'].strip()); 
     return "done"
 
 #=============================================
@@ -634,10 +634,10 @@ def deletegrades():
 @app.route('/changeweights', methods=["POST"])
 @requireauth('changeweights')
 def changeweights():
-    clsn = request.form["classname"]
-    term = request.form['term']
+    clsn = request.form["classname"].strip()
+    term = request.form['term'].strip()
     nameParts = clsn.split("-")
-    weights =  json.loads(request.form['weights'])
+    weights =  json.loads(request.form['weights'].strip())
     mydb = db.db()
 
     if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
@@ -649,10 +649,10 @@ def changeweights():
 @app.route('/createassignmenttype', methods=["POST"])
 @requireauth('createassignmenttype')
 def createassignmenttypr():
-    clsn = request.form["classname"]
-    term = request.form['term']
+    clsn = request.form["classname"].strip()
+    term = request.form['term'].strip()
     nameParts = clsn.split("-")
-    atname = request.form['atname']
+    atname = request.form['atname'].strip()
     mydb = db.db()
     if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
         return 'false'
@@ -663,10 +663,10 @@ def createassignmenttypr():
 @app.route('/removeassignmenttype', methods=["POST"])
 @requireauth('removeassignmenttype')
 def removeassignmenttypr():
-    clsn = request.form["classname"]
-    term = request.form['term']
+    clsn = request.form["classname"].strip()
+    term = request.form['term'].strip()
     nameParts = clsn.split("-")
-    atname = request.form['atname']
+    atname = request.form['atname'].strip()
     mydb = db.db()
     if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
         return 'false'
@@ -678,10 +678,10 @@ def removeassignmenttypr():
 @app.route('/savegradeoptions', methods=["POST"])
 @requireauth('savegradeoptions')
 def savegradeoptions():
-    clsn = request.form["classname"]
-    term = request.form['term']
+    clsn = request.form["classname"].strip()
+    term = request.form['term'].strip()
     nameParts = clsn.split("-")
-    option = request.form['option']
+    option = request.form['option'].strip()
     mydb = db.db()
 
     if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
