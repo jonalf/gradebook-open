@@ -9,15 +9,15 @@ from utils import user
 from utils import studentdb
 from utils.user import requireauth, markUsage
 
-if gethostname() == 'nibbler':
+if gethostname() == 'gradebook':
     userfile = '/var/www/gradebook/data/gbusers'
 else:
     userfile = 'data/gbusers'
 
-CURRENT_TERM = '2015-spring'
+CURRENT_TERM = '2015-fall'
 
 app = Flask(__name__)
-app.secret_key = open('/dev/random', 'rb').read(32)
+app.secret_key = open('/dev/urandom', 'rb').read(32)
 
 #LOGIN LOGOUT SELECTION FUNCTIONS
 @app.route("/")
