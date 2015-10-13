@@ -35,7 +35,11 @@ var loadGrades = function() {
 			       }
 			       s+= '<td>' + c[classn][type][i]['name'] + '</td>';
 			       s+= '<td>' + c[classn][type][i]['max'] + '</td>';
-			       s+= '<td>' + c[classn][type][i]['points'] + '</td></tr>';
+			       var points = c[classn][type][i]['points'];
+			       if ( points == -1 ) {
+				   points = 'Not Graded';
+			       }
+			       s+= '<td>' + points + '</td></tr>';
 			   }
 			   s+= '</table>';
 		       }

@@ -186,6 +186,47 @@ def studentgradeload():
     grades = sdb.getGrades( session['user'], CURRENT_TERM )
     return json.dumps(grades)
 
+
+@app.route("/studentpwreset")
+@requireauth('/studentpwreset')
+def studentpwreset():
+    print "RESET!"
+    if 'user' not in session:
+        return redirect(url_for("login"))
+    else:
+        return render_template("studentpwreset.html", usr = session['user'])
+
+@app.route("/studentnewpw", methods = ["POST", "GET"])
+@requireauth('/studentnewpw')
+def studentnewpw():
+    message = '<div class="redalert"><center>'
+    if request.method == "GET":
+        return redirect(url_for("login"))
+    else:
+        u = request.form['user'].strip()
+        op = request.form['oldpass'].strip()
+        np1 = request.form['newpass1'].strip()
+        np2 = request.form['newpass2'].strip()
+
+        students = studentdb.studentdb()
+
+        if np1 != np2:
+            flash('New Passwords do not match, Please Try Again')
+            return redirect( url_for("studentpwreset", usr = u) )
+
+        elif len(np1) < 6:
+            flash('Passwords must have at least 6 characters, Please Try Again')
+            return redirect( url_for("studentpwreset", usr = u) )
+            
+        elif students.authenticate( u, op ):
+            students.setPassword( u, np1 )
+            return redirect( url_for("studentlogout") )
+ 
+        else:
+            flash('Incorrect Password, Please Try Again')
+            return redirect( url_for("studentpwreset", usr = u) )
+
+
 #=============================================
 
 
