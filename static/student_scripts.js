@@ -8,14 +8,14 @@ var loadStudent = function() {
 	       heading = document.querySelectorAll('#sname')[0];
 	       heading.innerText = "Grades for: " + name;
 	   });
+    
 
     loadGrades();
 }
 
 var loadGrades = function() {
-
         $.post("/studentgradeload",{},
-           function( data, status ) {
+           function( data, status ) {	       
 	       var c = eval("(" + data + ")" );	       
 	       s = '';
 	       for  ( classn in c ) {

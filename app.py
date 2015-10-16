@@ -177,7 +177,7 @@ def studentload():
     sdb = studentdb.studentdb()
     cdb = db.db()
     student = sdb.getStudent( session['user'] )
-    sdb.getGrades( session['user'], CURRENT_TERM )
+    #sdb.getGrades( session['user'], CURRENT_TERM )
     return json.dumps(student)
 
 @app.route('/studentgradeload', methods = ['POST'])
