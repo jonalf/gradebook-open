@@ -953,6 +953,15 @@ class db:
                 backup+= ','.join(lineparts) + '\n'
         return backup
 
+    def printSeats( self, csp, term ):
+        target = self.getClass( csp, term )
+        students = target[0]['students']
+        print 'rows ' + target[0]['rows'] + '\tcols ' + target[0]['cols']
+        print 'first\tlast\tid\trow\tcol'
+        for s in students:
+            print '%s\t%s\t%s\t%s\t%s'%(s['row'],s['col'],s['id'], s['first'], s['last'])
+
+
 #Functions for interactive mode
 def menu():
     choiceCheck = False
@@ -1045,6 +1054,16 @@ def showClasses(mydb, picking = True):
 def remClass(mydb):
     class1 = showClasses(mydb)
     mydb.removeClass( class1[:3], class1[3] )
+
+#==============================
+# Needed to deal with the missing student bug
+# student is given the same seat as someone else
+# print out the seats for the class
+def print_seats( csp, term ):
+    d = db()
+    students = d.getClass(csp, term)[0]['students']
+    for s in students:
+        print ' '.join( [ s['row'], s['col'], '\t',  s['first'], s['last'], s['id'] ] )
 
 if __name__ == '__main__':
     print '\n'

@@ -294,13 +294,13 @@ def seated():
 @app.route("/validip", methods = ["POST"])
 @requireauth('validip')
 def validip():
-    allowedIPs=['149.89.','10.32.','127.0.0.1','165.155.2', '10.55.', '69.55.54.210']
-    ip = request.remote_addr
-    for i in  allowedIPs:
-        if ip.startswith( i ):
-            return 'true'
-    return 'false'
-
+    # allowedIPs=['149.89.','10.32.','127.0.0.1','165.155.2', '10.55.', '69.55.54.210']
+    # ip = request.remote_addr
+    # for i in  allowedIPs:
+    #     if ip.startswith( i ):
+    #         return 'true'
+    # return 'false'
+    return 'true'
 
 #=============================================
 
