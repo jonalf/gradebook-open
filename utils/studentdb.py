@@ -131,7 +131,7 @@ class studentdb:
                                  {'$set': {'password': pw}} )
     
     def clearPassword( self, id ):
-        setPassword( id, '' )
+        self.setPassword( id, '' )
     
         
     def isPasswordSet(self, id):
