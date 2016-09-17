@@ -8,6 +8,7 @@ from utils import db
 from utils import user
 from utils import studentdb
 from utils.user import requireauth, markUsage
+from random import randint
 
 if gethostname() == 'gradebook':
     userfile = '/var/www/gradebook/data/gbusers'
@@ -459,8 +460,10 @@ def reseat():
     row2= request.form["row2"].strip()
     col2 = request.form["col2"].strip()
     mydb = db.db()
+    
     if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
         return 'false'
+    
     mydb.setSeat( (nameParts[0], nameParts[1], nameParts[2] ), term, 
                   id1, row1, col1)
     mydb.setSeat( (nameParts[0], nameParts[1], nameParts[2] ), term, 
@@ -480,6 +483,34 @@ def setseat():
                   request.form['sid'].strip(), 
                   request.form['row'].strip(), request.form['col'].strip())
     return "done"
+
+@app.route("/arrangeRandom", methods = ["POST"])
+@requireauth('arrangeRandom')
+def arrangeRandom():
+    clsn = request.form["classname"].strip()
+    term = request.form['term'].strip()
+    nameParts = clsn.split("-")
+    mydb = db.db()
+    if session['teacher'] != mydb.getTeacher( (nameParts[0], nameParts[1], nameParts[2] ), term ):
+        return 'false'
+
+    cls = mydb.getClass( (nameParts[0], nameParts[1], nameParts[2] ), term )
+    students = cls[0]['students']
+    for i in range(100):
+        s1 = students[randint(0, len(students)-1)]
+        s2 = students[randint(0, len(students)-1)]
+        r = s1['row']
+        c = s1['col']
+        s1['row'] = s2['row']
+        s1['col'] = s2['col']
+        s2['row'] = r
+        s2['col'] = c
+        mydb.setSeat( (nameParts[0], nameParts[1], nameParts[2]), term,
+                      s1['id'], s1['row'], s1['col'])
+        mydb.setSeat( (nameParts[0], nameParts[1], nameParts[2]), term,
+                      s2['id'], s2['row'], s2['col'])
+    return json.dumps( cls[0] )
+
 #=============================================
 
 # STUDENT VIEW FUNCTIONS

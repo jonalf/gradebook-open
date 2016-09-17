@@ -3,7 +3,7 @@ var M_ARRANGE = 1;
 var M_STUDENT = 2;
 var M_ASSIGNMENT = 3;
 var M_GRADES = 4;
-var M_PARTICIPATION = 5
+var M_PARTICIPATION = 5;
 
 var selectedTerm = '';
 var currentClass;
@@ -12,11 +12,11 @@ var arrangeSelected = false;
 var selectedStudent;
 var studentList;
 var availableStudentList;
-var assignmentTypes = null
-var addRemove = false
-var gradeOptions = []
-var rows
-var cols
+var assignmentTypes = null;
+var addRemove = false;
+var gradeOptions = [];
+var rows;
+var cols;
 
 
 //CLASS SELECTION FUNCTIONS
@@ -26,7 +26,7 @@ function loadselect(term) {
            function( data, status ) {
 	       var c = eval("(" + data + ")" );
 	       if ( c[selectedTerm] ) {
-		   var currentClasses = getClassList(c[selectedTerm], '')
+		   var currentClasses = getClassList(c[selectedTerm], '');
 		   $("#selection").html( currentClasses );
 	       }
 
@@ -144,26 +144,27 @@ function loadclass( clsname, term, mode ) {
 	       $('#nav_report').html('Reports <b class="caret">')
 
 	       if ( mode == M_ARRANGE ) {
-		   var buttons = '<button id="action_button"  class="btn btn-info btn-block" onclick="newSize()">Resize</button><hr><button class="btn btn-info btn-block" onclick="showPics()">Show Pictures</button>';
+		   var buttons = '<button  class="btn btn-info btn-block" onclick="randomSeats()">Random</button><hr><button id="action_button"  class="btn btn-info btn-block" onclick="newSize()">Resize</button><hr><button class="btn btn-info btn-block" onclick="showPics()">Show Pictures</button>';
 		   $('#iface').html(buttons);
 		   $("#cterm").append('<button onclick="loadhelp(1)" id="help_button" class="btn btn-warning btn-xs">?</button>');
-		   $('#nav_class').html('Arrange <b class="caret">')
+		   $('#nav_class').html('Arrange <b class="caret">');
+		   setStudentList(c['students']);
 	       }
 	       else if ( mode == M_STUDENT ) {
 		   var buttons = '<button id="action_button" class="btn btn-info btn-block" onclick="addStudent()">Add Student</button><hr><button class="btn btn-info btn-block" onclick="showPics()">Show Pictures</button></div>';
 		   $("#iface").html(buttons);
 		   $("#cterm").append('<button class="btn btn-warning btn-xs" onclick="loadhelp(2)" id="help_button">?</button>');
-		   $('#nav_class').html('Student <b class="caret">')
+		   $('#nav_class').html('Student <b class="caret">');
 	       }
 	       else if ( mode == M_PARTICIPATION ) {
 		   var buttons = '<button class="btn btn-info btn-block" onclick="pickRandom()">Random Student</button><hr><button class="btn btn-info btn-block" onclick="pickWeighted()">Weighted</button></div>';
 		   $("#iface").html(buttons);
 		   $("#cterm").append('<button class="btn btn-warning btn-xs" onclick="loadhelp(5)" id="help_button">?</button>');
 
-		   $(".jumbotron").append('<h3 style="color: red;" class="message">Participation does not currently factor into grades. Currently, selecing "Weighted" will pick a random student but will be more likely to pick someone with a low participation total</h3>')
+		   $(".jumbotron").append('<h3 style="color: red;" class="message">Participation does not currently factor into grades. Currently, selecing "Weighted" will pick a random student but will be more likely to pick someone with a low participation total</h3>');
 
-		   setStudentList(c['students'])
-		   $('#nav_class').html('Participation <b class="caret">')
+		   setStudentList(c['students']);
+		   $('#nav_class').html('Participation <b class="caret">');
 	       }
 	       else if ( mode == M_ATTENDANCE ) {
 		   var iface = '<button id="action_button" class="btn btn-info btn-block" onclick="saveAttendance()">Save Attendance</button><hr>';
@@ -174,37 +175,37 @@ function loadclass( clsname, term, mode ) {
 					    onSelect:seeDaysAttendance});
 		   seeDaysAttendance();
 		   $("#cterm").append('<button class="btn btn-warning btn-xs" onclick="loadhelp(0)" id="help_button">?</button>');
-		   $('#nav_class').html('Attendance <b class="caret">')
+		   $('#nav_class').html('Attendance <b class="caret">');
 	       }
 	       else if ( mode == M_ASSIGNMENT ) {
-		   var html = '<div class="form-group"><input type="text" class="form-control input-sm" placeholder="Assignment Name" id="aname">'
-		   html+= '<input class="form-control input-sm" type="text" pattern="[0-9]*" placeholder="Max Points" id="amax">'
-		   html+= '<input type="text" class="form-control input-sm" pattern="[0-9]*" placeholder="Default Points" id="adefault"><br>'
-		   html+= loadAssignmentTypes( Object.keys(c['assignments']), 'radio')
-		   html+= '<br><input type="checkbox" name="public" value="public" id="apublic">Allow students to view these grades<br>'
-		   html+= '<br><button class="btn btn-info btn-block" id="action_buton" onclick="saveGrades()">Save Grades</button><br><button class="btn btn-warning btn-block" id="adelete" onclick="deleteAssignment()">Delete Assignment</button></div><hr>'
-		   html+= '<select class="form-control" id="aselection"></select><br><button class="btn btn-info btn-block" id="apick" onclick="changeAssignment()">Change Assignment</button><br></div>'
+		   var html = '<div class="form-group"><input type="text" class="form-control input-sm" placeholder="Assignment Name" id="aname">';
+		   html+= '<input class="form-control input-sm" type="text" pattern="[0-9]*" placeholder="Max Points" id="amax">';
+		   html+= '<input type="text" class="form-control input-sm" pattern="[0-9]*" placeholder="Default Points" id="adefault"><br>';
+		   html+= loadAssignmentTypes( Object.keys(c['assignments']), 'radio');
+		   html+= '<br><input type="checkbox" name="public" value="public" id="apublic">Allow students to view these grades<br>';
+		   html+= '<br><button class="btn btn-info btn-block" id="action_buton" onclick="saveGrades()">Save Grades</button><br><button class="btn btn-warning btn-block" id="adelete" onclick="deleteAssignment()">Delete Assignment</button></div><hr>';
+		   html+= '<select class="form-control" id="aselection"></select><br><button class="btn btn-info btn-block" id="apick" onclick="changeAssignment()">Change Assignment</button><br></div>';
 		   $("#iface").html(html);
 		   $("#cterm").append('<button class="btn btn-warning btn-xs" onclick="loadhelp(3)" id="help_button">?</button>');
-		   $('#nav_class').html('Assignment <b class="caret">')
+		   $('#nav_class').html('Assignment <b class="caret">');
 		   getAssignments();
 	       }
 	       else if ( mode == M_GRADES ) {
-		   var html = '<form class="form-horizontal"><div class="col-sm-12">Weights:</div>'
-		   html+= loadAssignmentTypes( Object.keys(c['assignments']), 'weights', c)
-		   html+= '</div></form>'
-		   html+= '<button class="btn btn-info btn-block" onclick="changeWeights()">Change Weights</button><br><button class="btn btn-info btn-block" onclick="setGradeOptions()">More Options</button><br><button class="btn btn-info btn-block" onclick="addAssignmentType()">Add Assignment Type</button><br><button class="btn btn-info btn-block" onclick="removeAssignmentType()">Remove Assignment Type</button>'
+		   var html = '<form class="form-horizontal"><div class="col-sm-12">Weights:</div>';
+		   html+= loadAssignmentTypes( Object.keys(c['assignments']), 'weights', c);
+		   html+= '</div></form>';
+		   html+= '<button class="btn btn-info btn-block" onclick="changeWeights()">Change Weights</button><br><button class="btn btn-info btn-block" onclick="setGradeOptions()">More Options</button><br><button class="btn btn-info btn-block" onclick="addAssignmentType()">Add Assignment Type</button><br><button class="btn btn-info btn-block" onclick="removeAssignmentType()">Remove Assignment Type</button>';
 		   $("#iface").html(html);
 		   $("#cterm").append('<button class="btn btn-warning btn-xs" onclick="loadhelp(4)" id="help_button">?</button>');
-		   $('#nav_class').html('Grades <b class="caret">')
+		   $('#nav_class').html('Grades <b class="caret">');
 	       }
 	       setClickAction( mode, c['weights'] );
            });
     if ( mode == M_GRADES )
         showGrades();
-    if ( mode != M_PARTICIPATION ) {
-	studentList = null
-	availableStudentList = null
+    if ( mode != M_PARTICIPATION && mode != M_ARRANGE ) {
+	studentList = null;
+	availableStudentList = null;
     }
 }
 
@@ -275,13 +276,13 @@ function getClassTable( students ) {
     
     for ( var r=0; r < rows; r++ ) {
         
-        text+= '<tr>'
+        text+= '<tr>';
         for ( var c=0; c < cols; c++ ) {
             
             if ( cs < numStudents ) {
-                var cid = students[cs].id
+                var cid = students[cs].id;
                 text+= '<td><div class="student" data-r="' + r +
-                '" data-c="' + c + '" id="' + cid + '">'
+                    '" data-c="' + c + '" id="' + cid + '">';
                 if ( students[cs].nick != "" )
                     text+= students[cs].nick + "<br>";
                 text+= students[cs].first + "<br>" +
@@ -296,9 +297,9 @@ function getClassTable( students ) {
                 emptyID--;
             }
         }
-        text+= '</tr>\n'
+        text+= '</tr>\n';
     }
-    text+= '</table>'
+    text+= '</table>';
     $.post("/seated",{classname:currentClass, term:selectedTerm, seated:1, rows:rows, cols:cols});
     return text;
 }
@@ -310,13 +311,13 @@ function getClassTableSeated( students ) {
     
     for ( var r=0; r < rows; r++ ) {
         
-        text+= '<tr>'
+        text+= '<tr>';
         for ( var c=0; c < cols; c++ ) {
             
             var s = findStudentBySeat( r, c, students );
             if ( s != null ) {
-                var cid = s.id
-                text+= '<td class="student" data-r="' + r + '" data-c="' + c + '" id="' + cid + '">'
+                var cid = s.id;
+                text+= '<td class="student" data-r="' + r + '" data-c="' + c + '" id="' + cid + '">';
                 if ( s.nick != "" )
                     text+= s.nick + "<br>";
                 text+= s.first + "<br>" + s.last + "<br></td>\n";
@@ -326,9 +327,9 @@ function getClassTableSeated( students ) {
                 emptyID--;
             }
         }
-        text+= '</tr>\n'
+        text+= '</tr>\n';
     }
-    text+= '</table>'
+    text+= '</table>';
     return text;
 }
 
@@ -769,13 +770,13 @@ function generateAttendanceTotalReport() {
 
 function generateAttendanceReport2( dateString ) {
 
-    $('.active').removeClass('active')
-    $('#reportdropdown').addClass('active')
-    $('#nav_class').html('Classview <b class="caret">')
-    $('#nav_report').html('Daily Attendance <b class="caret">')
-    $('.message').remove()
-    $('#iface').remove()
-    $('.btn-warning').remove()
+    $('.active').removeClass('active');
+    $('#reportdropdown').addClass('active');
+    $('#nav_class').html('Classview <b class="caret">');
+    $('#nav_report').html('Daily Attendance <b class="caret">');
+    $('.message').remove();
+    $('#iface').remove();
+    $('.btn-warning').remove();
 
     if ( !dateString ) {
 	dateString = $("#datepick").val();
@@ -975,7 +976,13 @@ function saveAttendance() {
 				absent : absences.join("_"), 
 				late : latenesses.join("_"),
 				excused : excuses.join("_"),
-				exlates : exlates.join("_")} );  
+				exlates : exlates.join("_")},
+	   function( data, status ) {
+	       if ( status == "success" ) {
+		   console.log("ATTENDANCE SAVED");
+		   $("#iface").prepend( "<center><b>ATTENDANCE SAVED<b><center>");
+	       }
+	   });  
 }
 
 function seeDaysAttendance( day ) {
@@ -1048,50 +1055,50 @@ function downvote( id ) {
 
 function setStudentList( students ) {
 
-    studentList = {}
-    availableStudentList = []
+    studentList = {};
+    availableStudentList = [];
     for (var i=0; i < students.length; i++) {
-	studentList[students[i]['id']] =  0
-	availableStudentList[i] = students[i]['id']
+	studentList[students[i]['id']] =  0;
+	availableStudentList[i] = students[i]['id'];
     }
 }
 
 function resetAvailableStudents( ids ) {
-    availableStudentList = []
+    availableStudentList = [];
     for (var i=0; i < ids.length; i++)
-	availableStudentList[i] = ids[i]    
+	availableStudentList[i] = ids[i];
 }
 
 function getParticipationTotal() {
-    var total = 0
+    var total = 0;
     for (var id in studentList ) {
-	var p = parseFloat( $('#' + id + ' .upcount').text() )
+	var p = parseFloat( $('#' + id + ' .upcount').text() );
 	if ( p == 1 )
-	    total+= .75
+	    total+= .75;
 	else if ( p != 0 )
-	    total+= 1.0 / p
+	    total+= 1.0 / p;
 	else
-	    total+= 1
+	    total+= 1;
     }
-    return total
+    return total;
 }
 
 function pickWeighted() {
     $(".bluealert").removeClass("bluealert");
-    var total = getParticipationTotal()
-    var r = Math.random() * total
-    var t = 0
+    var total = getParticipationTotal();
+    var r = Math.random() * total;
+    var t = 0;
     for (var id in studentList ) {
-	var p = parseFloat( $('#' + id + ' .upcount').text() )
+	var p = parseFloat( $('#' + id + ' .upcount').text() );
 	if ( p == 1 )
-	    t+= .75
+	    t+= .75;
 	else if ( p != 0 )
-	    t+= 1.0 / p
+	    t+= 1.0 / p;
 	else
-	    t+= 1
+	    t+= 1;
 	if ( r <= t ) {	    
-	    $('#' + id).addClass('bluealert')
-	    return id
+	    $('#' + id).addClass('bluealert');
+	    return id;
 	}
     }    
 }
@@ -1099,13 +1106,13 @@ function pickWeighted() {
 function pickRandom() {
     $(".bluealert").removeClass("bluealert");    
     if ( availableStudentList.length == 0 )
-	resetAvailableStudents( Object.keys(studentList) )
+	resetAvailableStudents( Object.keys(studentList) );
 
     var r = Math.floor( Math.random() * 
-			availableStudentList.length )
-    var s = availableStudentList.splice(r, 1)[0]    
-    $('#' + s).addClass('bluealert')
-    console.log(s)
+			availableStudentList.length );
+    var s = availableStudentList.splice(r, 1)[0];    
+    $('#' + s).addClass('bluealert');
+    console.log(s);
 }
 
 //===== END PARTICIPATION MODE FUNCTIONS =======
@@ -1122,54 +1129,60 @@ function reseat( id ) {
     else {
         var target1 = $( "#" + id);
         var target2 = $( "#" + selectedStudent);
-        
-        var sname = target2.html();
-        target2.html( target1.html());
-        target2.attr("id", id);
-        target2.attr("onclick", "reseat(" + id + ")");
-        
-        target1.html( sname );
-        target1.attr("id", selectedStudent);
-        target1.attr("onclick", "reseat(" + selectedStudent + ")");
-        
-        target2.removeClass("redalert");
-        arrangeSelected = false;
-        
-        $.post("/reseat", { classname:currentClass,
+
+	$.post("/reseat", { classname:currentClass,
 			    term:selectedTerm,
 			    id1 : id,
 			    row1 : target2.attr("data-r"),
 			    col1 : target2.attr("data-c"),
 			    id2 : selectedStudent,
 			    row2 : target1.attr("data-r"),
-			    col2 : target1.attr("data-c") } )
+			    col2 : target1.attr("data-c") },
+	       function( data, status ) {
+		   console.log(data);
+		   console.log(status);
+		   if ( status == "success" ) {
+		       console.log( "moved" );
+		       var sname = target2.html();
+		       target2.html( target1.html());
+		       target2.attr("id", id);
+		       target2.attr("onclick", "reseat(" + id + ")");
+		       
+		       target1.html( sname );
+		       target1.attr("id", selectedStudent);
+		       target1.attr("onclick", "reseat(" + selectedStudent + ")");
+        
+		       target2.removeClass("redalert");
+		       arrangeSelected = false;
+		   }
+	       });
     }
 }
 
 function newSize() {
        
-    var html = '<form class="form-horizontal">'
+    var html = '<form class="form-horizontal">';
 
-    html+= '<div class="form-group"><label for="rows" class="col-sm-4" control-label>Rows</label><div class="col-sm-8"><select id="rows" class="form-control">'
+    html+= '<div class="form-group"><label for="rows" class="col-sm-4" control-label>Rows</label><div class="col-sm-8"><select id="rows" class="form-control">';
     for (var i=1; i <= 12; i++)
-        html+= '<option value="' + i + '">' + i + '</option>'
-    html+= '</select></div></div>'
+        html+= '<option value="' + i + '">' + i + '</option>';
+    html+= '</select></div></div>';
 
-    html+= '<div class="form-group"><label for="cols" class="col-sm-4" control-label>Cols</label><div class="col-sm-8"><select id="cols" class="form-control">'
+    html+= '<div class="form-group"><label for="cols" class="col-sm-4" control-label>Cols</label><div class="col-sm-8"><select id="cols" class="form-control">';
     for (var i=1; i <= 12; i++)
-        html+= '<option value="' + i + '">' + i + '</option>'
-    html+= '</select></div></div></form>'
+        html+= '<option value="' + i + '">' + i + '</option>';
+    html+= '</select></div></div></form>';
     
-    var button = '<button type="button" class="mbutton btn btn-info" onclick="resize()">Resize</button>'
+    var button = '<button type="button" class="mbutton btn btn-info" onclick="resize()">Resize</button>';
     $(".modal-body").html(html);
 
-    $('#rows').val(rows)
-    $('#cols').val(cols)
+    $('#rows').val(rows);
+    $('#cols').val(cols);
 
-    $('.modal-title').text('Resize Class Grid')
-    $('.mbutton').remove()
-    $('.modal-footer').append(button)
-    $('#mainmodal').modal('show')
+    $('.modal-title').text('Resize Class Grid');
+    $('.mbutton').remove();
+    $('.modal-footer').append(button);
+    $('#mainmodal').modal('show');
 }
 
 function resize() {
@@ -1188,7 +1201,22 @@ function resize() {
 		   $("#student_table").append( getClassTableSeated(s["students"]));
 	       setClickAction( M_ARRANGE );
            });
-    clearModal()
+    clearModal();
+}
+
+function randomSeats() {
+    
+    $.post("/arrangeRandom", { classname : currentClass, term:selectedTerm},
+           function( data, status ) {
+	       var s = eval("(" + data + ")" );
+	       $("#student_table").empty();
+	       if ( s["seated"] == 0 )
+		   $("#student_table").append( getClassTable(s["students"]) );
+	       else
+		   $("#student_table").append( getClassTableSeated(s["students"]));
+	       //setClickAction( M_ARRANGE );
+           });
+
 }
 
 //====== END ARRANGE MODE FUNCTIONS =======
