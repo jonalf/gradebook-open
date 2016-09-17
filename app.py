@@ -14,7 +14,7 @@ if gethostname() == 'gradebook':
 else:
     userfile = 'data/gbusers'
 
-CURRENT_TERM = '2016-spring'
+CURRENT_TERM = '2016-fall'
 
 app = Flask(__name__)
 app.secret_key = open('/dev/urandom', 'rb').read(32)
