@@ -66,6 +66,25 @@ def newstudent2(first, last, nick, stuyid, hr, id, email, row, col):
             'tests':[],
             'projects':[]
             }
+def newstudent3(first, last, nick, stuyid, hr, id, email, row, col, ass):
+    return {'last':last,
+            'first':first,
+            'nick':nick,
+            'stuyid':stuyid,
+            'hr':hr,
+            'id':id,
+            'email':email,
+            'row':row,
+            'col':col,
+            'absent':[],
+            'late':[],
+            'excused':[],
+            'exlate':[],
+            'assignments':ass,
+            'work':[],
+            'tests':[],
+            'projects':[]
+            }
 
 def newassignment(name, points, maxp):
     return { 'name': name,
@@ -544,7 +563,12 @@ class db:
                                 {'$pull' : { 'students' : { 'id' : sid }}})
                                  
     def addStudent(self, csp, term, first, last, nick, sid, email, row, col, stuyid, hr):
-        s = newstudent2(first, last, nick, stuyid, hr, sid, email, row, col);
+        ass = self.getClass(csp, term)[0]['assignments']
+        assignments = {}
+        for key in ass:
+            assignments[key] = []
+            
+        s = newstudent3(first, last, nick, stuyid, hr, sid, email, row, col, assignments);
         self.db.classes.update( {'code':csp[0],
                                  'section':csp[1],
                                  'period':csp[2],

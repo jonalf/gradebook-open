@@ -1261,18 +1261,18 @@ function newStudent() {
     var c = $("#-1").attr("data-c");
 
     var proceed = true
-    var missing = '<p style="color:red">The following required fields are missing: '
+    var missing = '<p style="color:red">The following required fields are missing: ';
     if ( first == '' ) {
 	proceed = false;
-	missing+= 'First Name '
+	missing+= 'First Name ';
     }
     if ( last == '' ) {
 	proceed = false;
-	missing+= 'Last Name '
+	missing+= 'Last Name ';
     }
     if ( id == '' ) {
 	proceed = false;
-	missing+= 'OSIS '
+	missing+= 'OSIS ';
     }
 
     if ( proceed ) {
@@ -1282,13 +1282,13 @@ function newStudent() {
 				row:r, col:c, stuyid:stuyid, hr:hr},
                function( data, status ) {
 	       loadclass( currentClass, selectedTerm, M_STUDENT);
-		   $('#mainmodal').modal('hide')
+		   $('#mainmodal').modal('hide');
                });    
     }
     
     else {
-	missing+= '</p>'
-	$('.modal-body').append(missing)
+	missing+= '</p>';
+	$('.modal-body').append(missing);
     }
 }
 
