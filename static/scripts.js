@@ -426,7 +426,7 @@ function overlay(clearStudent) {
 
 
 //REPORTS FUNCTIONS
-
+/*
 function loadreports( clsname, term ) {
     var html = "<h2>Please select the type of report you would like to see</h2>";
     html+= "<select id=\"rtype\">";
@@ -445,7 +445,7 @@ function loadreports( clsname, term ) {
     $('#nav_class').html('Classview <b class="caret">');
     $("#reportdropdown").addClass("active");
 }
-
+*/
 function viewReport() {
 
     var rtype = $("#rtype").val();
@@ -753,7 +753,7 @@ function generateAttendanceTotalReport() {
     $('.message').remove();
     $('#iface').remove();
     $('.btn-warning').remove();
-
+    
     $.post("/loadclass", { classname : currentClass,term:selectedTerm}, 
 	   function( data, status ) {
 	       var c = eval("(" + data + ")" );
@@ -780,7 +780,7 @@ function generateAttendanceReport2( dateString ) {
     $('.message').remove();
     $('#iface').remove();
     $('.btn-warning').remove();
-
+    
     if ( !dateString ) {
 	dateString = $("#datepick").val();
 	$("#report").remove();
@@ -810,7 +810,7 @@ function generateAttendanceReport2( dateString ) {
 		   html+= '<tr><td><div id="att_' + classes[i] +
 		   '"></div></td></tr>';
 	       
-	       $("#temp").remove()
+	       $("#temp").remove();
 	       $("#student_table").html(html);
 
 	       for (var i=0; i < classes.length; i++) {
@@ -1601,7 +1601,8 @@ function saveGrades() {
 	defaultg = 0;
     else
 	defaultg = parseFloat( defaultg );
-	      
+
+    console.log( $(".student") );
     $(".student").each(
         function() {
 	    if ( parseInt(this.id) >= 1000 ) {
@@ -1624,7 +1625,8 @@ function saveGrades() {
 			    apublic:$("#apublic").is(":checked"),
 			    points:parseFloat($("#amax").val())},
            function(data, status) {
-               loadclass( currentClass, selectedTerm, M_GRADES);
+	       $("#action_buton").before("<strong><center>GRADES SAVED</center></strong>");
+               //loadclass( currentClass, selectedTerm, M_GRADES);
            });
 }
 
@@ -1652,8 +1654,8 @@ function changeAssignment() {
 	       var t = 'a' + c['type'];
 	       $('#' + t).prop('checked', true);
 	       
-	       console.log ( c['public'] );
-
+	       //console.log ( c['public'] );
+	       
 	       if ( c['public'] == 1 ) 
 		   $('#apublic').attr('checked', true);
 	       else
@@ -1711,13 +1713,19 @@ function aViewToggle() {
 
     if ( assignmentView == V_GRID ) {
 	assignmentView = V_LIST;
-	$("#aViewToggle").text("Grid View");
+	$("#aViewToggle").text("Grid View");	
 	aListView();
+	if ( $("#aname").val() ) {
+	    changeAssignment();
+	}
     }
     else {
 	assignmentView = V_GRID;
 	$("#aViewToggle").text("List View");
-	aListView();
+	loadclass( currentClass, selectedTerm, M_ASSIGNMENT );
+	if ( $("#aname").val() ) {
+	    changeAssignment();
+	}
     }
 }
 
@@ -1741,7 +1749,8 @@ function aListView() {
 	});
     //console.log( students );
     
-    var table = "<table class=\"report\"><tr class=\"report1\"><th>Last Name</th><th>First Name</th><th>Grade</th></tr>";
+    var table = "<table id=\"student_table\"><tr><td>";
+    table+= "<table class=\"report\"><tr class=\"report1\"><th>Last Name</th><th>First Name</th><th>Grade</th></tr>";
 
     students = students.sort(
 	function(a, b) {
@@ -1761,16 +1770,13 @@ function aListView() {
 	else
 	    rowStyle = 'report2';
 	i+= 1;
-	var row = '<tr id="' + student[3] + '" class="' + rowStyle + ' student_list"><td>' + student[1] + '</td><td>' + student[0] + '</td><td>' +  student[2] + '</td></tr>';
+	var row = '<tr id="' + student[3] + '" class="' + rowStyle + ' student_list student"><td>' + student[1] + '</td><td>' + student[0] + '</td><td>' +  student[2] + '</td></tr>';
 	//console.log(row);
 	table+= row;
     }
     table+= '</table>';
-
-    $("#student_table").after( table );
-    $("#student_table").remove();
-    console.log(table);
-    //$("#100004 td input").val()
+    table+= '</td></tr></table>';
+    $("#student_table").html( table );
 }
 
 //====== END ASSIGNMENT MODE FUNCTIONS ========

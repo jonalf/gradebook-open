@@ -29,6 +29,11 @@ table {
     border: 4px solid lightsteelblue;
 }
 
+.student_list {
+    height: auto;
+    text-align: left;
+}
+
 /* BOOTSTRAP MODIFICATIONS */
 .btn-stack {
     margin-bottom: 5px;
