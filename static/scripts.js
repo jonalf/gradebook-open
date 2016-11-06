@@ -4,6 +4,8 @@ var M_STUDENT = 2;
 var M_ASSIGNMENT = 3;
 var M_GRADES = 4;
 var M_PARTICIPATION = 5;
+var V_GRID = 0;
+var V_LIST = 1;
 
 var selectedTerm = '';
 var currentClass;
@@ -17,7 +19,7 @@ var addRemove = false;
 var gradeOptions = [];
 var rows;
 var cols;
-
+var assignmentView = V_GRID;
 
 //CLASS SELECTION FUNCTIONS
 function loadselect(term) {
@@ -34,7 +36,7 @@ function loadselect(term) {
 	       for (var i=0; i<c['terms'].length; i++) {
 		   var term = c['terms'][i];
 		   if (term != selectedTerm && term != 'terms') 
-		       oldClasses+= getClassList( c[term], term )
+		       oldClasses+= getClassList( c[term], term );
 	       }
 	       $("#selection2").html( oldClasses );
            });
@@ -45,37 +47,37 @@ function loadSelectMenu(term) {
     $.post("/loadselect",{},
            function( data, status ) {
 	       var c = eval("(" + data + ")" );
-	       var html = ''
-	       var currentClasses = c[selectedTerm]
-	       var classNames = getClassList2( c[selectedTerm], '' )
+	       var html = '';
+	       var currentClasses = c[selectedTerm];
+	       var classNames = getClassList2( c[selectedTerm], '' );
 	       for ( var i=0; i < classNames.length; i++ ) {	       
 		   html+= '<li><a href="/classview?classname=' + 
 		       classNames[i] + '&term=' + selectedTerm + 
-		       '">' + classNames[i] + '</a></li>'
+		       '">' + classNames[i] + '</a></li>';
 	       }
-	       var oldClasses = []
+	       var oldClasses = [];
 	       for (var i=0; i<c['terms'].length; i++) {
 		   var t = c['terms'][i];
 		   if (t != selectedTerm && t != 'terms') 
-		       oldClasses.push(getClassList2( c[t], t ))
+		       oldClasses.push(getClassList2( c[t], t ));
 	       }
 	       for (var i=0; i < oldClasses.length; i++) {
 		   html+='<hr>'
 		   for (var j=0; j < oldClasses[i].length; j++) {
-		       oldClass = oldClasses[i][j].split(' ')
+		       oldClass = oldClasses[i][j].split(' ');
 		       html+= '<li><a href="/classview?classname=' +
 			   oldClass[1] + '&term=' + oldClass[0] +'">' +
-			   oldClasses[i][j] + '</a></li>'
+			   oldClasses[i][j] + '</a></li>';
 		   }
 	       }
-	       $('#selectmenu').html(html)
+	       $('#selectmenu').html(html);
            });
 }
 
 function getClassList( classes, term ) {
 
-    var text = ''
-    var classNames = getClassList2( classes, term )
+    var text = '';
+    var classNames = getClassList2( classes, term );
     for ( var i=0; i < classNames.length; i++ ) {
 	text+= '<option>' + classNames[i] + '</option>';
     }
@@ -93,7 +95,7 @@ function getClassList2( classes, term ) {
 	    classNames[i] = term + ' ' + classNames[i];
     }
     classNames.sort();
-    return classNames
+    return classNames;
 } 
 //===== END CLASS SELECTION FUNCTIONS =======
 
@@ -102,7 +104,7 @@ function getClassList2( classes, term ) {
 function loadclass( clsname, term, mode ) {
     selectedTerm = term;
     var sizeSet = true;
-    loadSelectMenu( term )
+    loadSelectMenu( term );
 
     $.post("/loadclass", { classname : clsname, term : selectedTerm },
            function( data, status ) {
@@ -111,11 +113,11 @@ function loadclass( clsname, term, mode ) {
 		   return;
 	       s = c["students"];
 	       currentClass = clsname;
-	       assignmentTypes = Object.keys(c['assignments'])
-	       gradeOptions = c['options']
+	       assignmentTypes = Object.keys(c['assignments']);
+	       gradeOptions = c['options'];
 	       var numStudents = s.length;
-	       var tmp = '<div class="row">'
-	       tmp+= '<div class="col-md-10">'
+	       var tmp = '<div class="row">';
+	       tmp+= '<div class="col-md-10">';
 	       var dbRows = c["rows"];
 	       var dbCols = c["cols"];
            
@@ -133,15 +135,15 @@ function loadclass( clsname, term, mode ) {
 		   cols = dbCols;
 		   tmp+= getClassTableSeated(s);
 	       }
-	       tmp+= '</div><div class="col-md-2"><div id="iface"></div></div></div>'
+	       tmp+= '</div><div class="col-md-2"><div id="iface"></div></div></div>';
 	       $('#content').empty();
 	       $('#content').html( tmp );
 
 	       $("#help_button").remove();
-	       $('.message').remove()
+	       $('.message').remove();
 	       $(".active").removeClass("active");
-	       $("#classdropdown").addClass("active")
-	       $('#nav_report').html('Reports <b class="caret">')
+	       $("#classdropdown").addClass("active");
+	       $('#nav_report').html('Reports <b class="caret">');
 
 	       if ( mode == M_ARRANGE ) {
 		   var buttons = '<button  class="btn btn-info btn-block" onclick="randomSeats()">Random</button><hr><button id="action_button"  class="btn btn-info btn-block" onclick="newSize()">Resize</button><hr><button class="btn btn-info btn-block" onclick="showPics()">Show Pictures</button>';
@@ -184,7 +186,8 @@ function loadclass( clsname, term, mode ) {
 		   html+= loadAssignmentTypes( Object.keys(c['assignments']), 'radio');
 		   html+= '<br><input type="checkbox" name="public" value="public" id="apublic">Allow students to view these grades<br>';
 		   html+= '<br><button class="btn btn-info btn-block" id="action_buton" onclick="saveGrades()">Save Grades</button><br><button class="btn btn-warning btn-block" id="adelete" onclick="deleteAssignment()">Delete Assignment</button></div><hr>';
-		   html+= '<select class="form-control" id="aselection"></select><br><button class="btn btn-info btn-block" id="apick" onclick="changeAssignment()">Change Assignment</button><br></div>';
+		   html+= '<select class="form-control" id="aselection"></select><br><button class="btn btn-info btn-block" id="apick" onclick="changeAssignment()">Change Assignment</button><br><hr>';
+		   html+= '<button class="btn btn-info btn-block" id="aViewToggle" onclick="aViewToggle()">List View</button><br>';
 		   $("#iface").html(html);
 		   $("#cterm").append('<button class="btn btn-warning btn-xs" onclick="loadhelp(3)" id="help_button">?</button>');
 		   $('#nav_class').html('Assignment <b class="caret">');
@@ -210,21 +213,21 @@ function loadclass( clsname, term, mode ) {
 }
 
 function loadAssignmentTypes( atypes, amode, c ) {
-    var html = ''
+    var html = '';
     for (var i=0; i < atypes.length; i++) {
 	atname = atypes[i];
 	
 	if ( amode == 'radio' ) {
 	    html+= '<input type="radio" id="a' + atname + 
-	'" name="atype" value="' + atname + '" checked>' +
-	atname + '<br>'
+		'" name="atype" value="' + atname + '" checked>' +
+		atname + '<br>';
 	}
 	
 	else if ( amode == 'weights' ) {
-	    html+= '<div class="form-group"><label for="' + atname + 'weight" class="col-sm-5 control-label">' + atname + '</label><div class="col-sm-7"><input class="form-control" id="' + atname + 'weight" type="text" pattern="[0-9]*" value ="' + c['weights'][atname] + '" size="3"></div></div>'
+	    html+= '<div class="form-group"><label for="' + atname + 'weight" class="col-sm-5 control-label">' + atname + '</label><div class="col-sm-7"><input class="form-control" id="' + atname + 'weight" type="text" pattern="[0-9]*" value ="' + c['weights'][atname] + '" size="3"></div></div>';
 	}
     }
-    return html
+    return html;
 }
 
 function setalert( id ) {
@@ -263,7 +266,7 @@ function loadhelp( mode ) {
     else if ( mode == M_GRADES )
         helptext = "In grades mode each student's current grade will be calculated and displayed under the student's name. You can change the weights for each assignment types. Ideally, the total of all three weights should be 1.0";
     else if ( mode == M_PARTICIPATION )
-        helptext = 'Participation mode'
+        helptext = 'Participation mode';
     alert(helptext);
 }
 
@@ -345,7 +348,7 @@ function findStudentBySeat( r, c, students ) {
 
 function setClickAction( mode, weights ) {
     
-    var actiontext = ""
+    var actiontext = "";
     
     $(".student").each( function() {
         if ( mode == M_ATTENDANCE )
@@ -357,9 +360,9 @@ function setClickAction( mode, weights ) {
         else if ( mode == M_ASSIGNMENT && parseInt(this.id) >= 1000 )
             $(this).append('<br><input type="text" pattern="[0-9]*" size="3" id="grade">');
         else if (mode == M_PARTICIPATION && parseInt(this.id) >= 1000) {
-	    var html = $(this).html()
-	    var upbutton='<button class="votebutton" onclick="upvote(' + this.id + ')"> + </button>'
-	    var downbutton='<button class="votebutton" onclick="downvote(' + this.id + ')"> - </button>'
+	    var html = $(this).html();
+	    var upbutton='<button class="votebutton" onclick="upvote(' + this.id + ')"> + </button>';
+	    var downbutton='<button class="votebutton" onclick="downvote(' + this.id + ')"> - </button>';
 	    html = '<div class="downcount">0</div>' +
 		'<div class="upcount">0</div>' + 
 		html + downbutton + upbutton;
@@ -396,12 +399,12 @@ function showPics() {
 }
 
 function clearModal() {
-    currentStudent = null
-    $('.redalert').removeClass('redalert')
-    $('.modal-title').empty()
-    $('.modal-body').empty()
-    $('.mbutton').remove()
-    $('#mainmodal').modal('hide')
+    currentStudent = null;
+    $('.redalert').removeClass('redalert');
+    $('.modal-title').empty();
+    $('.modal-body').empty();
+    $('.mbutton').remove();
+    $('#mainmodal').modal('hide');
 }
 
 function overlay(clearStudent) {
@@ -425,21 +428,21 @@ function overlay(clearStudent) {
 //REPORTS FUNCTIONS
 
 function loadreports( clsname, term ) {
-    var html = "<h2>Please select the type of report you would like to see</h2>"
-    html+= "<select id=\"rtype\">"
-    html+= "<option value=\"r_all_attendance\">Todays Attendance (all classes)</option>"
-    html+= "<option value=\"r_attendance\">Attendance Totals</option>"
-    html+= "<option value=\"r_ogrades\">Overall Grades</option>"
-    html+= "</select><br>"
-    html+= "<button onclick=\"viewReport()\">Get Report</button>"
+    var html = "<h2>Please select the type of report you would like to see</h2>";
+    html+= "<select id=\"rtype\">";
+    html+= "<option value=\"r_all_attendance\">Todays Attendance (all classes)</option>";
+    html+= "<option value=\"r_attendance\">Attendance Totals</option>";
+    html+= "<option value=\"r_ogrades\">Overall Grades</option>";
+    html+= "</select><br>";
+    html+= "<button onclick=\"viewReport()\">Get Report</button>";
     
     $("#iface").remove();
     $("#help_button").remove();
-    $('.message').remove()
-    $('.button-warning').remove()
+    $('.message').remove();
+    $('.button-warning').remove();
     $("#student_table").html( html );
-    $("#classdropdown").removeClass("active")
-    $('#nav_class').html('Classview <b class="caret">')
+    $("#classdropdown").removeClass("active");
+    $('#nav_class').html('Classview <b class="caret">');
     $("#reportdropdown").addClass("active");
 }
 
@@ -465,13 +468,13 @@ function viewReport() {
 
 function generateFullGradesReport() {
 
-    $('.active').removeClass('active')
-    $('#nav_class').html('Classview <b class="caret">')
-    $('#nav_report').html('Grades <b class="caret">')
-    $('#reportdropdown').addClass('active')
-    $('.message').remove()
-    $('#iface').remove()
-    $('.btn-warning').remove()
+    $('.active').removeClass('active');
+    $('#nav_class').html('Classview <b class="caret">');
+    $('#nav_report').html('Grades <b class="caret">');
+    $('#reportdropdown').addClass('active');
+    $('.message').remove();
+    $('#iface').remove();
+    $('.btn-warning').remove();
 
     $.post("/loadclass", { classname : currentClass,term:selectedTerm}, 
 	   function( data, status ) {
@@ -484,21 +487,21 @@ function generateFullGradesReport() {
 	       var gradeTotal = 0;
 	       var rGradeTotal = 0;
 	       var html= "<div id=\"report\"><table><tr><td><h2>Class Grades</h2><br>";
-	       var table = "<table class=\"report\"><tr class=\"report1\"><th>Last Name</th><th>First Name</th>"
+	       var table = "<table class=\"report\"><tr class=\"report1\"><th>Last Name</th><th>First Name</th>";
 
-	       gradeOptions = c['options']
-	       atypes = Object.keys(c['assignments'])
+	       gradeOptions = c['options'];
+	       atypes = Object.keys(c['assignments']);
 	       for (var i=0; i < atypes.length; i++)
-		   table+= '<th>' + atypes[i] + '</th>'
+		   table+= '<th>' + atypes[i] + '</th>';
 	       table+= '<th>Grade</th><th>Rounded Grade</th></tr>';
 
 
 	       cs = c['students'];
 	       cs.sort( compareStudentNames );
 
-	       var aTotals = {}
+	       var aTotals = {};
 	       for (var i=0; i < atypes.length; i++)
-		   aTotals[ atypes[i] ] = 0
+		   aTotals[ atypes[i] ] = 0;
 
 	       for (var i = 0; i < c['students'].length; i++) {
 		   s = c['students'][i];
@@ -509,14 +512,14 @@ function generateFullGradesReport() {
 		   table+= "<td>"+ s['last'] +
 		       "</td><td>"+s['first'] +"</td>";
 		   
-		   assignments = s['assignments']		   
-		   var g = 0
+		   assignments = s['assignments'];
+		   var g = 0;
 		   for (var at=0; at < atypes.length; at++) {
-		       var a = computeGradePart(assignments[atypes[at]], atypes[at])
-		       g+= a * c['weights'][atypes[at]]
-		       aTotals[ atypes[at] ]+= a
+		       var a = computeGradePart(assignments[atypes[at]], atypes[at]);
+		       g+= a * c['weights'][atypes[at]];
+		       aTotals[ atypes[at] ]+= a;
 		       
-		       table+='<td>' + a.toFixed(2) + '</td>'
+		       table+='<td>' + a.toFixed(2) + '</td>';
 		   }
 		   var rg = getRoundedGrade( g );		   
 		   gradeTotal+= g;
@@ -530,29 +533,29 @@ function generateFullGradesReport() {
 	       gradeTotal = gradeTotal / c['students'].length;
 	       rGradeTotal = rGradeTotal / c['students'].length;
 
-	       table+= "<tr><td colspan=\"2\">Averages</td>" 
+	       table+= "<tr><td colspan=\"2\">Averages</td>";
 	       for (var i=0; i < atypes.length; i++) {
 
 		   aTotals[atypes[i]] = aTotals[atypes[i]] /
-		       c['students'].length
-		   table+= '<td>' + aTotals[atypes[i]].toFixed(2) + "</td>"
+		       c['students'].length;
+		   table+= '<td>' + aTotals[atypes[i]].toFixed(2) + "</td>";
 	       }
 	       table+= '<td>' + gradeTotal.toFixed(2) + "</td><td>" +
-		   rGradeTotal.toFixed(2) + "</td></tr>"
+		   rGradeTotal.toFixed(2) + "</td></tr>";
 	       table+= "</table></td></tr>";
 
 	       html += table;
 	       for (var i=0; i < atypes.length; i++) {
-		   atype = atypes[i]
+		   atype = atypes[i];
 		   var atable = getGradeTable( c['students'],
-					       c['assignments'][atype], atype)
-		   html+= '<tr><td><h2>' + atype + ' Grades</h2><br>'
-		   html+= atable
-		   html+= '</td></tr>'
+					       c['assignments'][atype], atype);
+		   html+= '<tr><td><h2>' + atype + ' Grades</h2><br>';
+		   html+= atable;
+		   html+= '</td></tr>';
 	       }	       
 	       html+= '</div>';
 	       $("#student_table").html(html);
-	       $("#temp").remove()
+	       $("#temp").remove();
 	       $("td").addClass("report");
 	       $("th").addClass("report");
 	   });
@@ -575,7 +578,7 @@ function getGradeTable( students, assignments, type ) {
     var table = "<table class=\"report\"><tr class=\"report1\"><th>Last Name</th><th>First Name</th>";
     for (var i=0; i < anames.length; i++)
 	table+= "<th>" + anames[i] + "</th>";
-    table+= "</tr>"
+    table+= "</tr>";
 
     for (var i=0; i < students.length; i++) {
 	var info = getStudentWorkRow(students[i], anames, type, i);
@@ -671,33 +674,33 @@ function getRoundedGrade( grade ) {
 }
 
 function computeGradePart(grades, type, weight){
-    var points = 0
-    var max = 0
+    var points = 0;
+    var max = 0;
 
     if ( type == 'tests' && grades.length > 0 ) {
-	var lowtotal = grades[0]['points']
-	var lowtmax = grades[0]['max']	
-	var lowavg = grades[0]['points'] / lowtmax	
-	var lowapoints = lowtotal
-	var lowamax = lowtmax
+	var lowtotal = grades[0]['points'];
+	var lowtmax = grades[0]['max'];
+	var lowavg = grades[0]['points'] / lowtmax;
+	var lowapoints = lowtotal;
+	var lowamax = lowtmax;
     }
 
     for (var i=0; i < grades.length; i++) {
 	if ( grades[i]['points'] != -1 ) {
 	    var p = grades[i]['points'];
 	    var m = grades[i]['max'];
-	    points+= p
-	    max+= m
+	    points+= p;
+	    max+= m;
 	    
 	    if ( type == 'tests' ) {
 		if ( p < lowtotal ) {
-		    lowtotal = p
-		    lowtmax = m
+		    lowtotal = p;
+		    lowtmax = m;
 		}
 		if ( p/m < lowavg ) {
-		    lowavg = p/m
-		    lowapoints = p
-		    lowamax = m
+		    lowavg = p/m;
+		    lowapoints = p;
+		    lowamax = m;
 		}
 	    }
 	}
@@ -705,12 +708,12 @@ function computeGradePart(grades, type, weight){
     
     if ( type == 'tests' ) {
 	if ( gradeOptions.indexOf('drop-avg') != -1 ) {
-	    points-= lowapoints
-	    max-= lowamax
+	    points-= lowapoints;
+	    max-= lowamax;
 	}
 	else if ( gradeOptions.indexOf('drop-total') != -1 ) {
-	    points-= lowtotal
-	    max-= lowtmax
+	    points-= lowtotal;
+	    max-= lowtmax;
 	}
     }
 
@@ -719,7 +722,7 @@ function computeGradePart(grades, type, weight){
 	grade = 0;
 
     if ( weight == null ) {
-	return grade * 100
+	return grade * 100;
     }
     else {
 	return grade * weight;
@@ -743,13 +746,13 @@ function getGradeAverage( grades ) {
 }
 */
 function generateAttendanceTotalReport() {
-    $('.active').removeClass('active')
-    $('#nav_class').html('Classview <b class="caret">')
-    $('#nav_report').html('Attendance Totals <b class="caret">')
-    $('#reportdropdown').addClass('active')
-    $('.message').remove()
-    $('#iface').remove()
-    $('.btn-warning').remove()
+    $('.active').removeClass('active');
+    $('#nav_class').html('Classview <b class="caret">');
+    $('#nav_report').html('Attendance Totals <b class="caret">');
+    $('#reportdropdown').addClass('active');
+    $('.message').remove();
+    $('#iface').remove();
+    $('.btn-warning').remove();
 
     $.post("/loadclass", { classname : currentClass,term:selectedTerm}, 
 	   function( data, status ) {
@@ -759,7 +762,7 @@ function generateAttendanceTotalReport() {
 	       var html = generateAttendanceTotalTable( c['students'],
 						    currentClass);
 	       $("#student_table").html(html);
-	       $("#temp").remove()
+	       $("#temp").remove();
 	       $("td").addClass("report");
 	       $("th").addClass("report");
 	       $("#datepick").datepick({showTrigger:"#calImg",
@@ -838,7 +841,7 @@ function generateAttendanceReport2( dateString ) {
 function generateAttendanceTable( dateString, students, cls ) {
 
     var table = "<h2>" + cls + " Attendance for " + dateString + "</h2><br>";
-    table+= "<table class=\"report\"><tr class=\"report1\"><th>Last Name</th><th>First Name</th><th>Attendance</th></tr>"
+    table+= "<table class=\"report\"><tr class=\"report1\"><th>Last Name</th><th>First Name</th><th>Attendance</th></tr>";
 
     students.sort( compareStudentNames );
 
@@ -865,7 +868,7 @@ function generateAttendanceTable( dateString, students, cls ) {
 function generateAttendanceTotalTable( students, cls ) {
 
     var table = "<h2>Attendance Totals</h2>";
-    table+= "<table class=\"report\"><tr class=\"report1\"><th>Last Name</th><th>First Name</th><th>Absent</th><th>Late</th><th>Excused Absences</th><th>Excused Latnesses</th></tr>"
+    table+= "<table class=\"report\"><tr class=\"report1\"><th>Last Name</th><th>First Name</th><th>Absent</th><th>Late</th><th>Excused Absences</th><th>Excused Latnesses</th></tr>";
 
     students.sort( compareStudentNames );
 
@@ -876,18 +879,18 @@ function generateAttendanceTotalTable( students, cls ) {
 	else 
 	    table+= "<tr class=\"report2\"><td>";
 	
-	ab = s['absent'].length
+	ab = s['absent'].length;
 	if ( ab == 0)
-	    ab = '-'
-	ea = s['excused'].length
+	    ab = '-';
+	ea = s['excused'].length;
 	if ( ea == 0)
-	    ea = '-'
-	la = s['late'].length
+	    ea = '-';
+	la = s['late'].length;
 	if ( la == 0)
-	    la = '-'
-	el = s['exlate'].length
+	    la = '-';
+	el = s['exlate'].length;
 	if ( el == 0)
-	    el = '-'
+	    el = '-';
 
 	table+= s['last'] +"</td><td>"+ s['first'] +"</td>";
 	table+= '<td>' + ab + '</td>' +
@@ -1040,17 +1043,17 @@ function isValidDate( s ) {
 //PARTICIPATION MODE FUNCTIONS
 function upvote( id ) {
     console.log( id );
-    var upcount = parseInt($('#'+id+' .upcount').text())
-    upcount++
+    var upcount = parseInt($('#'+id+' .upcount').text());
+    upcount++;
     console.log( upcount );
-    $('#'+id+' .upcount').text(upcount)
+    $('#'+id+' .upcount').text(upcount);
 }
 
 function downvote( id ) {
-    var downcount = parseInt($('#'+id+' .downcount').text())
-    downcount++
-    console.log( downcount )
-    $('#'+id+' .downcount').text(downcount)
+    var downcount = parseInt($('#'+id+' .downcount').text());
+    downcount++;
+    console.log( downcount );
+    $('#'+id+' .downcount').text(downcount);
 }
 
 function setStudentList( students ) {
@@ -1229,22 +1232,22 @@ function addStudent() {
         $("#temp").append( message );
     }
     else {
-        var html = "<table border=\"0\">"
+        var html = "<table border=\"0\">";
         html+= "<tr><td>*First Name:</td><td><input type=\"text\" id=\"first\"></td></tr>";
         html+= "<tr><td>*Last Name:</td><td><input type=\"text\" id=\"last\"></td></tr>";
         html+= "<tr><td>Nickname:</td><td><input type=\"text\" id=\"nick\"></td></tr>";
-        html+= '<tr><td>*OSIS:</td><td><input type="text" pattern="[0-9]*" id="id"></td></tr>'
-        html+= '<tr><td>ID:</td><td><input type="text" pattern="[0-9]*" id="stuyid"></td></tr>'
-        html+= '<tr><td>HR:</td><td><input type="text" pattern="[0-9]*" id="hr"></td></tr>'
+        html+= '<tr><td>*OSIS:</td><td><input type="text" pattern="[0-9]*" id="id"></td></tr>';
+        html+= '<tr><td>ID:</td><td><input type="text" pattern="[0-9]*" id="stuyid"></td></tr>';
+        html+= '<tr><td>HR:</td><td><input type="text" pattern="[0-9]*" id="hr"></td></tr>';
         html+= "<tr><td>Email:</td><td><input type=\"text\" id=\"email\"></td></tr></table>";
 
-        var buttons = '<button class="btn btn-info mbutton" onclick="newStudent()">Add Student</button>'
+        var buttons = '<button class="btn btn-info mbutton" onclick="newStudent()">Add Student</button>';
         
-	$('.modal-title').text('Add a New Student')
+	$('.modal-title').text('Add a New Student');
         $('.modal-body').html(html);
-	$('.mbutton').remove()
-	$('.modal-footer').append(buttons)
-	$('#mainmodal').modal('show')
+	$('.mbutton').remove();
+	$('.modal-footer').append(buttons);
+	$('#mainmodal').modal('show');
     }
 }
 
@@ -1260,7 +1263,7 @@ function newStudent() {
     var r = $("#-1").attr("data-r");
     var c = $("#-1").attr("data-c");
 
-    var proceed = true
+    var proceed = true;
     var missing = '<p style="color:red">The following required fields are missing: ';
     if ( first == '' ) {
 	proceed = false;
@@ -1295,21 +1298,21 @@ function newStudent() {
 function studentInfo(id) {
     var html = '';
     if ( parseInt(id) >= 1000 ) {
-        $('#mainmodal').modal('show')
-	$('.mbutton').remove()
+        $('#mainmodal').modal('show');
+	$('.mbutton').remove();
         
         $.post("/getinfo", { classname : currentClass, term:selectedTerm, sid : id  },
                function( data, status ) {
 		   var c = eval("(" + data + ")" )[0];
 		   currentStudent = c;
 		   
-		   $('.modal-title').text(c['first'] + ' ' + c['last'])
-		   html+= '<div class="row">'
-		   html+= '<div class="col-sm-4"><button type="button" class="btn btn-info btn-stack" onclick="infoView()">Student Information</button></div>'
-		   html+= '<div class="col-sm-4"><button type="button" class="btn btn-info btn-stack" onclick="attendanceView()">Student Attendance</button></div>'
-		   html+= '<div class="col-sm-4"><button type="button" class="btn btn-info btn-stack" onclick="workView()">Student Work</button></div></div>'
-		   html+= '<br><div class="row"><div class="col-sm-6"><button type="button" class="btn btn-warning btn-stack" onclick="removeStudent()">Remove Student</button></div>'
-		   html+= '<div class="col-sm-6"><button type="button" class="btn btn-warning btn-stack" onclick="transferStudent()">Transfer Student</button></div></div></div>'
+		   $('.modal-title').text(c['first'] + ' ' + c['last']);
+		   html+= '<div class="row">';
+		   html+= '<div class="col-sm-4"><button type="button" class="btn btn-info btn-stack" onclick="infoView()">Student Information</button></div>';
+		   html+= '<div class="col-sm-4"><button type="button" class="btn btn-info btn-stack" onclick="attendanceView()">Student Attendance</button></div>';
+		   html+= '<div class="col-sm-4"><button type="button" class="btn btn-info btn-stack" onclick="workView()">Student Work</button></div></div>';
+		   html+= '<br><div class="row"><div class="col-sm-6"><button type="button" class="btn btn-warning btn-stack" onclick="removeStudent()">Remove Student</button></div>';
+		   html+= '<div class="col-sm-6"><button type="button" class="btn btn-warning btn-stack" onclick="transferStudent()">Transfer Student</button></div></div></div>';
 
 		   $('.modal-body').html(html);
                });          
@@ -1317,12 +1320,12 @@ function studentInfo(id) {
 }
 
 function removeStudent() {
-    var html = '<b>Are you sure you want to remove this student from your class? This action cannot be undone!<b>' 
-    var buttons = '<button class="btn btn-warning mbutton" type="button" onclick="removeStudentConfirm()">Remove Student</button>'
+    var html = '<b>Are you sure you want to remove this student from your class? This action cannot be undone!<b>';
+    var buttons = '<button class="btn btn-warning mbutton" type="button" onclick="removeStudentConfirm()">Remove Student</button>';
 
     $('.modal-body').html(html);
-    $('.modal-body').addClass('redalert')
-    $('.modal-footer').append(buttons)
+    $('.modal-body').addClass('redalert');
+    $('.modal-footer').append(buttons);
 }
 
 function removeStudentConfirm() {
@@ -1340,14 +1343,14 @@ function transferStudent() {
            function( data, status ) {
 	       var c = eval("(" + data + ")" );
 	       c = c[selectedTerm];
-	       var menu = "<select id=\"newclass\">"
+	       var menu = "<select id=\"newclass\">";
 	       menu+= getClassList(c, '');
 	       menu+= "</select>";
 	       
 	       var html = "Please select one of your other classes to transfer this student to:<br>" + menu;
-	       var buttons = '<button class="btn btn-warning mbutton" onclick="transfer()">Transfer</button>'
+	       var buttons = '<button class="btn btn-warning mbutton" onclick="transfer()">Transfer</button>';
 	       $('.modal-body').html(html);
-	       $('.modal-footer').append(buttons)
+	       $('.modal-footer').append(buttons);
            });
 }
 
@@ -1358,13 +1361,13 @@ function transfer() {
 			       targetclass:targetClass },
            function( data, status ) {
 	       if ( data == "false" ) {
-		   var html = '<b>The target class does not have enough room for a new student, please change the seating size for that class and try again.<b>'
-		   $('.mbutton').remove()
-		   $('.modal-body').html(html)
+		   var html = '<b>The target class does not have enough room for a new student, please change the seating size for that class and try again.<b>';
+		   $('.mbutton').remove();
+		   $('.modal-body').html(html);
 	       }
 	       else {
 		   loadclass( currentClass, selectedTerm, M_STUDENT);
-		   clearModal()
+		   clearModal();
 	       }
            });
 }
@@ -1372,35 +1375,35 @@ function transfer() {
 
 //INFO VIEW FUNCTIONS
 function infoView() {
-    var html = "<table border=\"0\">"
+    var html = "<table border=\"0\">";
     html+= "<tr><td>Nickname:</td><td>" + currentStudent['nick'] + "</td></tr>";
     html+= "<tr><td>OSIS:</td><td>" + currentStudent['id'] + "</td></tr>";
     html+= "<tr><td>ID:</td><td>" + currentStudent['stuyid'] + "</td></tr>";
     html+= "<tr><td>HR:</td><td>" + currentStudent['hr'] + "</td></tr>";
     html+= "<tr><td>Email:</td><td>" + currentStudent['email'] + "</td></tr>";
-    html+= '</table>'
+    html+= '</table>';
     
-    var button = '<button id="backbutton" class="mbutton btn btn-default" onclick="studentInfo(' + currentStudent['id'] + ')">Back</button><button class="btn btn-info mbutton" onclick="editInfo()">Edit</button>'
+    var button = '<button id="backbutton" class="mbutton btn btn-default" onclick="studentInfo(' + currentStudent['id'] + ')">Back</button><button class="btn btn-info mbutton" onclick="editInfo()">Edit</button>';
     
-    $('.mbutton').remove()
-    $('.modal-body').html(html)
-    $('.modal-footer').append(button)
+    $('.mbutton').remove();
+    $('.modal-body').html(html);
+    $('.modal-footer').append(button);
 }
 
 function editInfo() {
-    var html = "<table border=\"0\">"
+    var html = "<table border=\"0\">";
     html+= "<tr><td>Nickname:</td><td><input type=\"text\" id=\"nick\" value=\"" + currentStudent['nick'] + "\"></td></tr>";
     html+= '<tr><td>OSIS:</td><td><input type="text" pattern="[0-9]*" id="id" value="' + currentStudent['id'] + '" readonly></td></tr>';
     html+= '<tr><td>ID:</td><td><input type="text" pattern="[0-9]*" id="stuyid" value="' + currentStudent['stuyid'] + '"></td></tr>';
     html+= "<tr><td>HR:</td><td><input type=\"text\" id=\"hr\" value=\"" + currentStudent['hr'] + "\"></td></tr>";
     html+= "<tr><td>Email:</td><td><input type=\"text\" id=\"email\" value=\"" + currentStudent['email'] + "\"></td></tr>";
-    html+= '</table><br><br>'
+    html+= '</table><br><br>';
 
-    var buttons='<button class="btn btn-default mbutton" id="backbutton" onclick="infoView()">Back</button><button class="btn btn-info mbutton" onclick="saveInfo()">Save</button>'
+    var buttons='<button class="btn btn-default mbutton" id="backbutton" onclick="infoView()">Back</button><button class="btn btn-info mbutton" onclick="saveInfo()">Save</button>';
     
-    $('.modal-body').html(html)
-    $('.mbutton').remove()    
-    $('.modal-footer').append(buttons)
+    $('.modal-body').html(html);
+    $('.mbutton').remove();
+    $('.modal-footer').append(buttons);
 }
 
 function saveInfo() {
@@ -1420,15 +1423,15 @@ function saveInfo() {
 
 //ATTENDANCE VIEW FUNCTIONS
 function attendanceView() {
-    var calendars = '<div class="row">'
-    calendars += '<div class="col-sm-6 col-xs-12"><b>Absences ' + currentStudent['absent'].length + '</b><div id="abscal"></div></div>'
-    calendars += '<div class="col-sm-6 col-xs-12"><b>Excused Absences ' + currentStudent['excused'].length + '</b><div id="exccal"></div></div></div>'
-    calendars += '<br><div class="row"><div class="col-sm-6 col-xs-12"><b>Latenesses ' + currentStudent['late'].length + '</b><div id="latcal"></div></div>'
-    calendars += '<div class="col-sm-6 col-xs-12"><b>Excused Latenesses ' + currentStudent['exlate'].length + '</b><div id="exlcal"></div></div></div>'
+    var calendars = '<div class="row">';
+    calendars += '<div class="col-sm-6 col-xs-12"><b>Absences ' + currentStudent['absent'].length + '</b><div id="abscal"></div></div>';
+    calendars += '<div class="col-sm-6 col-xs-12"><b>Excused Absences ' + currentStudent['excused'].length + '</b><div id="exccal"></div></div></div>';
+    calendars += '<br><div class="row"><div class="col-sm-6 col-xs-12"><b>Latenesses ' + currentStudent['late'].length + '</b><div id="latcal"></div></div>';
+    calendars += '<div class="col-sm-6 col-xs-12"><b>Excused Latenesses ' + currentStudent['exlate'].length + '</b><div id="exlcal"></div></div></div>';
 
-    $('.modal-body').html(calendars)
+    $('.modal-body').html(calendars);
 
-    var buttons = '<button class="btn btn-default mbutton" id="backbutton" onclick="studentInfo(' + currentStudent['id'] + ')">Back</button><button class="btn btn-info mbutton" type="button" onclick="changeAttendance(' + currentStudent["id"] + ')">Save Attendance</button>'
+    var buttons = '<button class="btn btn-default mbutton" id="backbutton" onclick="studentInfo(' + currentStudent['id'] + ')">Back</button><button class="btn btn-info mbutton" type="button" onclick="changeAttendance(' + currentStudent["id"] + ')">Save Attendance</button>';
  
     $('.modal-footer').append(buttons);
     
@@ -1468,16 +1471,16 @@ function changeAttendance( id ) {
 function workView() {
     var gradeInfo = "<table border=\"0\">";
 
-    var atypes = Object.keys(currentStudent['assignments'])
+    var atypes = Object.keys(currentStudent['assignments']);
     for (var i=0; i < atypes.length; i++) {
 	gradeInfo+= getWorkRow( atypes[i] );
     }
     gradeInfo += "</table>";    
     var buttons = '<button class="btn btn-default mbutton" id="backbutton" onclick="studentInfo(' + currentStudent['id'] + ')">Back</button>';
     
-    $('.modal-body').html( gradeInfo )    
-    $('.mbutton').remove()
-    $('.modal-footer').append(buttons)
+    $('.modal-body').html( gradeInfo );
+    $('.mbutton').remove();
+    $('.modal-footer').append(buttons);
 }
 
 function getWorkRow( type ) {
@@ -1487,7 +1490,7 @@ function getWorkRow( type ) {
     var maxPoints = 0;
 
     for (var i=0; i<currentStudent['assignments'][type].length; i++) {
-	p = parseFloat(currentStudent['assignments'][type][i]['points'])
+	p = parseFloat(currentStudent['assignments'][type][i]['points']);
 	if ( p != -1 ) {
             totalPoints+= p;
             maxPoints+= parseFloat(currentStudent['assignments'][type][i]['max']);
@@ -1497,7 +1500,7 @@ function getWorkRow( type ) {
     if ( maxPoints == 0 )
         gradeInfo+= "-</td>";
     else
-        gradeInfo+= (totalPoints/maxPoints * 100).toFixed(2) + "%</td>"
+        gradeInfo+= (totalPoints/maxPoints * 100).toFixed(2) + "%</td>";
     gradeInfo += "<td><button class=\"btn btn-default\" onclick=\"fullWorkReport('" + type + "', " + totalPoints + ", " + maxPoints + ")\">Full View</button></td></tr>";
     
     return gradeInfo;
@@ -1513,7 +1516,7 @@ function fullWorkReport( type, total, max ) {
     
     var missing = new Array();
     var excused = new Array();
-    var workTable = '<br><center><h4>All Assignments</h4></center>'
+    var workTable = '<br><center><h4>All Assignments</h4></center>';
     var numAssignments = currentStudent['assignments'][type].length;
 
     for (var ca=0; ca < numAssignments; ca++) {
@@ -1532,18 +1535,18 @@ function fullWorkReport( type, total, max ) {
     }
     
     if ( missing.length == 0 )
-        html+= "Missing: -"
+        html+= "Missing: -";
     else
         html+= "Missing: " + missing;
     if ( excused.length == 0 )
-        html+= "<br>Excused: -"
+        html+= "<br>Excused: -";
     else
         html+= "<br>Excused: " + excused;
 
-    html+= "<br>" + workTable
+    html+= "<br>" + workTable;
     
-    var buttons = '<button class="btn btn-default mbutton" id="backbutton" onclick="workView()">Back</button>'
-    $('.mbutton').remove()
+    var buttons = '<button class="btn btn-default mbutton" id="backbutton" onclick="workView()">Back</button>';
+    $('.mbutton').remove();
     $('.modal-body').html( html );
     $('.modal-footer').append(buttons);
 }
@@ -1559,10 +1562,10 @@ function gradeChangeView(ca, type, id) {
 	html+= points;
     else 
 	html+= "E";
-    html+= '</b> Change to: <input type="text" pattern="[0-9]*" size="3" id="newgrade">'
+    html+= '</b> Change to: <input type="text" pattern="[0-9]*" size="3" id="newgrade">';
     var buttons= "<button class=\"btn btn-default mbutton\" id=\"backbutton\" onclick=\"workView()\">Back</button><button class=\"btn btn-info mbutton\" onclick=\"changeGrade('" + ca + "', '" + type + "', '" + id + "')\">Change Grade</button>";
     
-    $('.mbutton').remove()
+    $('.mbutton').remove();
     $('.modal-body').html( html );
     $('.modal-footer').append(buttons);
 }
@@ -1591,20 +1594,20 @@ function changeGrade(ca, type, id) {
 //ASSIGNMENT MODE FUNCTIONS
 function saveGrades() {
     var grades = {};
-    var defaultg = $('#adefault').val()
+    var defaultg = $('#adefault').val();
     if ( defaultg == 'e' || defaultg == 'E' )
-	defaultg = -1
+	defaultg = -1;
     else if ( isNaN( parseFloat(defaultg) ) )
-	defaultg = 0
+	defaultg = 0;
     else
-	defaultg = parseFloat( defaultg )
+	defaultg = parseFloat( defaultg );
 	      
     $(".student").each(
         function() {
 	    if ( parseInt(this.id) >= 1000 ) {
                 var g = $(this).find("input").val();
 		if ( g == 'e' || g == 'E' )
-		    g = -1
+		    g = -1;
                 else if ( isNaN(parseFloat(g)) )
                     g = defaultg;
                 else
@@ -1645,7 +1648,7 @@ function changeAssignment() {
 
 	       $('#aname').val( c['name'] );
 	       $('#amax').val( c['max'] );
-	       $('#adefault').val( '0' )
+	       $('#adefault').val( '0' );
 	       var t = 'a' + c['type'];
 	       $('#' + t).prop('checked', true);
 	       
@@ -1657,7 +1660,7 @@ function changeAssignment() {
 		   $('#apublic').attr('checked', false);
 
 	       for(var i=0; i < c['grades'].length; i++) {
-		   s = c['grades'][i]
+		   s = c['grades'][i];
 		   if (s['grade'] != -1)
 		       $('#' + s['id']).find('input').val(s['grade']);
 		   else {
@@ -1671,25 +1674,25 @@ function changeAssignment() {
 }
 
 function deleteAssignment() {
-    var assignment = $('#aname').val()
-    var atype = $('[type=radio]:checked').val()
-    var html = 'Are you sure you want to remove this assignment? Doing so will delete it from the database. This action is cannot be reversed.'
-    var button = '<button type="button" class="mbutton btn btn-info" onclick="deleteAssignmentConfirm()">Delete Assignment</button>'
+    var assignment = $('#aname').val();
+    var atype = $('[type=radio]:checked').val();
+    var html = 'Are you sure you want to remove this assignment? Doing so will delete it from the database. This action is cannot be reversed.';
+    var button = '<button type="button" class="mbutton btn btn-info" onclick="deleteAssignmentConfirm()">Delete Assignment</button>';
 
-    $('.modal-title').html('Remove ' + atype + ': ' + assignment + '?')
+    $('.modal-title').html('Remove ' + atype + ': ' + assignment + '?');
     $('.modal-body').html(html);
-    $('.modal-body').addClass('redalert')
-    $('.modal-footer').append(button)
-    $('#mainmodal').modal('show')    
+    $('.modal-body').addClass('redalert');
+    $('.modal-footer').append(button);
+    $('#mainmodal').modal('show');
 }
 
 function deleteAssignmentConfirm() {    
 
-    var ids = []
+    var ids = [];
     $(".student").each(
         function() {
 	    if ( parseInt(this.id) >= 1000 ) {
-		ids.push( this.id )
+		ids.push( this.id );
 	    }
 	});
     $.post("/deletegrades", { classname:currentClass,
@@ -1700,22 +1703,90 @@ function deleteAssignmentConfirm() {
            function(data, status) {
                loadclass( currentClass, selectedTerm, M_GRADES);
            });
-    clearModal()
+    clearModal();
 }
+
+
+function aViewToggle() {
+
+    if ( assignmentView == V_GRID ) {
+	assignmentView = V_LIST;
+	$("#aViewToggle").text("Grid View");
+	aListView();
+    }
+    else {
+	assignmentView = V_GRID;
+	$("#aViewToggle").text("List View");
+	aListView();
+    }
+}
+
+function aListView() {
+    var s = $(".student");
+    var students = [];
+    s.each(
+        function() {
+	    var id = this.id;
+	    if ( parseInt(id) > 0 ) {
+		
+		var info = $("#" + id).html().split('<br>');
+		if (info.length == 5) {
+		    info.splice(0, 1);		
+		}
+		info.splice(2, 1);
+		info.push(id);
+		students.push( info );
+		//console.log( info );
+	    }	    
+	});
+    //console.log( students );
+    
+    var table = "<table class=\"report\"><tr class=\"report1\"><th>Last Name</th><th>First Name</th><th>Grade</th></tr>";
+
+    students = students.sort(
+	function(a, b) {
+	    if ( a[1] != b[1] ) {
+		return a[1] > b[1] ? 1 : -1;
+	    }
+	    else {
+		return a[0] > b[0] ? 1 : -1;
+	    }
+	} );
+    var i = 0;
+
+    for ( let student of students ) {
+	var rowStyle = '';
+	if ( i % 2 == 1 )
+	    rowStyle = 'report1';
+	else
+	    rowStyle = 'report2';
+	i+= 1;
+	var row = '<tr id="' + student[3] + '" class="' + rowStyle + ' student_list"><td>' + student[1] + '</td><td>' + student[0] + '</td><td>' +  student[2] + '</td></tr>';
+	//console.log(row);
+	table+= row;
+    }
+    table+= '</table>';
+
+    $("#student_table").after( table );
+    $("#student_table").remove();
+    console.log(table);
+    //$("#100004 td input").val()
+}
+
 //====== END ASSIGNMENT MODE FUNCTIONS ========
 
 
 //GRADE MODE FUNCTIONS
 function showGrades() {
 
-    $('.redalert').removeClass('redalert')
-    $('.orangealert').removeClass('orangealert')
+    $('.redalert').removeClass('redalert');
+    $('.orangealert').removeClass('orangealert');
     
     $.post("/loadclass", { classname : currentClass,term:selectedTerm },
            function( data, status ) {
 	       var c = eval("(" + data + ")" );
 	       students = c['students'];
-               gradeOptions = c['options']
+               gradeOptions = c['options'];
 	       
 	       $(".grade").remove();
            
@@ -1725,9 +1796,9 @@ function showGrades() {
                                              + grade.toFixed(2) +
                                              "</div>");
 		   if ( grade < 65 )
-		       $("#" + students[i]['id']).addClass('redalert')
+		       $("#" + students[i]['id']).addClass('redalert');
 		   else if ( grade < 75 )
-		       $("#" + students[i]['id']).addClass('orangealert')
+		       $("#" + students[i]['id']).addClass('orangealert');
 	       }
            });
 }
@@ -1736,10 +1807,10 @@ function computeGrade( student, weights ) {
 
     var grade = 0;
     
-    var atypes = Object.keys( student['assignments'] )
+    var atypes = Object.keys( student['assignments'] );
     for (var i=0; i < atypes.length; i++) {
-	var a = atypes[i]
-	grade+= computeGradePart(student['assignments'][a], a, weights[a])
+	var a = atypes[i];
+	grade+= computeGradePart(student['assignments'][a], a, weights[a]);
     }
     grade = grade * 100;
     return grade;
@@ -1747,14 +1818,14 @@ function computeGrade( student, weights ) {
 
 function changeWeights() {
 
-    var weights = {}
+    var weights = {};
     for (var i=0; i < assignmentTypes.length; i++) {
 	a = assignmentTypes[i];
-	var w = parseFloat( $('#' + a + 'weight').val() )
+	var w = parseFloat( $('#' + a + 'weight').val() );
 	if ( isNaN(w) ) 
-	    weights[a] = 0
+	    weights[a] = 0;
 	else
-	    weights[a] = w
+	    weights[a] = w;
     }
     
     $.post("/changeweights", {classname:currentClass,
@@ -1767,44 +1838,44 @@ function changeWeights() {
 
 function addAssignmentType() {
 
-    var html = 'Enter name of new assignment type: '
-    html+= '<input type="text" class="form-control input-sm" id="newAssignmentType">'
+    var html = 'Enter name of new assignment type: ';
+    html+= '<input type="text" class="form-control input-sm" id="newAssignmentType">';
 
-    var button = '<button type="button" class="mbutton btn btn-info" onclick="createAssignmentType()">Confirm</button>'
+    var button = '<button type="button" class="mbutton btn btn-info" onclick="createAssignmentType()">Confirm</button>';
     
-    $('.modal-body').html( html )
-    $('.modal-title').html('Add Assignment Type')
-    $('.modal-footer').append( button )
-    $('#mainmodal').modal('show')
+    $('.modal-body').html( html );
+    $('.modal-title').html('Add Assignment Type');
+    $('.modal-footer').append( button );
+    $('#mainmodal').modal('show');
 }
 
 function createAssignmentType() {
 
-    var atname = $('#newAssignmentType').val()
+    var atname = $('#newAssignmentType').val();
     $.post("/createassignmenttype", {classname:currentClass,
 				     term:selectedTerm,
 				     atname:atname},
            function(data, status) {
 	       loadclass( currentClass, selectedTerm, M_GRADES );
-	       clearModal()
+	       clearModal();
            });
 }
 
 function removeAssignmentType() {
     
-    var html = 'WARNING: This action cannot be undone. You will remove all data relating the the selected assignment type from the server. It is suggested that you download a backup before taking this action. Proceed at your own risk<br><br>'
-    html+= loadAssignmentTypes( assignmentTypes, 'radio' )   
-    var button = '<button type="button" class="mbutton btn btn-info" onclick="deleteAssignmentType()">Confirm</button>'
+    var html = 'WARNING: This action cannot be undone. You will remove all data relating the the selected assignment type from the server. It is suggested that you download a backup before taking this action. Proceed at your own risk<br><br>';
+    html+= loadAssignmentTypes( assignmentTypes, 'radio' );
+    var button = '<button type="button" class="mbutton btn btn-info" onclick="deleteAssignmentType()">Confirm</button>';
 
-    $('.modal-body').html( html )
-    $('.modal-title').html('Remove Assignment Type')
-    $('.modal-footer').append( button )
-    $('#mainmodal').modal('show')
+    $('.modal-body').html( html );
+    $('.modal-title').html('Remove Assignment Type');
+    $('.modal-footer').append( button );
+    $('#mainmodal').modal('show');
 }
 
 function deleteAssignmentType() {
 
-    var atname = $('[type=radio]:checked').val()
+    var atname = $('[type=radio]:checked').val();
     $.post("/removeassignmenttype", {classname:currentClass,
 				     term:selectedTerm,
 				     atname:atname},
@@ -1815,24 +1886,24 @@ function deleteAssignmentType() {
 }
 
 function setGradeOptions() {
-    var html = 'Drop the lowest test grade by average: '
-    html+= '<button onclick="saveGradeOption(\'drop-avg\')"'
+    var html = 'Drop the lowest test grade by average: ';
+    html+= '<button onclick="saveGradeOption(\'drop-avg\')"';
     if ( gradeOptions.indexOf( 'drop-avg' ) == -1 ) 
-	html+= 'class="btn btn-default">Inactive'
+	html+= 'class="btn btn-default">Inactive';
     else
-	html+= 'class="btn btn-success">Active'
-    html+= '</button><br><br>'
+	html+= 'class="btn btn-success">Active';
+    html+= '</button><br><br>';
 
-    html+= 'Drop the lowest test grade by total points: '
-    html+= '<button onclick="saveGradeOption(\'drop-total\')"'
+    html+= 'Drop the lowest test grade by total points: ';
+    html+= '<button onclick="saveGradeOption(\'drop-total\')"';
     if ( gradeOptions.indexOf( 'drop-total' ) == -1 ) 
-	html+= 'class="btn btn-default">Inactive</button>'
+	html+= 'class="btn btn-default">Inactive</button>';
     else
-	html+= 'class="btn btn-success">Active</button>'
+	html+= 'class="btn btn-success">Active</button>';
 
-    $('.modal-body').html( html )
-    $('.modal-title').html('Grade Options')
-    $('#mainmodal').modal('show')
+    $('.modal-body').html( html );
+    $('.modal-title').html('Grade Options');
+    $('#mainmodal').modal('show');
 }
 
 function saveGradeOption( opt ) {
@@ -1841,7 +1912,7 @@ function saveGradeOption( opt ) {
 				term:selectedTerm,
 				option: opt },
 	   function(data, status) {
-	       $('#mainmodal').modal('hide')
+	       $('#mainmodal').modal('hide');
                showGrades();
            });   
 }
