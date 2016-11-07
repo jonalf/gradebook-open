@@ -187,7 +187,7 @@ function loadclass( clsname, term, mode ) {
 		   html+= '<br><input type="checkbox" name="public" value="public" id="apublic">Allow students to view these grades<br>';
 		   html+= '<br><button class="btn btn-info btn-block" id="action_buton" onclick="saveGrades()">Save Grades</button><br><button class="btn btn-warning btn-block" id="adelete" onclick="deleteAssignment()">Delete Assignment</button></div><hr>';
 		   html+= '<select class="form-control" id="aselection"></select><br><button class="btn btn-info btn-block" id="apick" onclick="changeAssignment()">Change Assignment</button><br><hr>';
-		   html+= '<button class="btn btn-info btn-block" id="aViewToggle" onclick="aViewToggle()">List View</button><br>';
+		   html+= '<button class="btn btn-info btn-block" id="aViewToggle" onclick="aViewToggle()">List View</button><br><strong>Changing view types before saving grades will lose all entered data for the assignment</strong>';
 		   $("#iface").html(html);
 		   $("#cterm").append('<button class="btn btn-warning btn-xs" onclick="loadhelp(3)" id="help_button">?</button>');
 		   $('#nav_class').html('Assignment <b class="caret">');
@@ -1762,8 +1762,9 @@ function aListView() {
 	    }
 	} );
     var i = 0;
-
-    for ( let student of students ) {
+    console.log(students);
+    for (var j=0; j <  students.length; j++ ) {
+	var student = students[j];
 	var rowStyle = '';
 	if ( i % 2 == 1 )
 	    rowStyle = 'report1';
