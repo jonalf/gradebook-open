@@ -15,7 +15,7 @@ if gethostname() == 'gradebook':
 else:
     userfile = 'data/gbusers'
 
-CURRENT_TERM = '2016-fall'
+CURRENT_TERM = '2017-spring'
 
 app = Flask(__name__)
 app.secret_key = open('/dev/urandom', 'rb').read(32)
@@ -765,6 +765,6 @@ def savegradeoptions():
 #=============================================
 
 if __name__=="__main__":
-    app.debug=True
+#    app.debug=True
     app.run()
 #    app.run(host='0.0.0.0')

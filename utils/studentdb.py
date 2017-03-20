@@ -74,6 +74,7 @@ class studentdb:
         for c in classList:
             students = classdb.getStudents( c, term )
             for s in students:
+                print s['first'] + ' ' + s['last']
                 test = self.getStudent( s['id'] )
                 if not test:
                     self.addStudent(s['last'], s['first'], s['stuyid'], s['hr'], s['id'], s['email'], c)
