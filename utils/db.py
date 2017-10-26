@@ -1104,6 +1104,3 @@ if __name__ == '__main__':
         showClasses(mydb, False)
 #    mydb.initialLoad("../data/students-base-9-9-2013.csv")
 #    mydb.setCurrentTerm('2013-fall')
-
-            
-
