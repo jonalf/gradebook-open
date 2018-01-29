@@ -143,9 +143,63 @@ class studentdb:
         student = self.getStudent(id)
         return student['password'] == pw
 
+def menu():
+    choiceCheck = False
+
+    while not choiceCheck:
+        menuText = '1: Import new term students\n'
+        menuText+= '2: Reset a student password\n'
+
+        print menuText
+        selection = raw_input('Choice: ')
+        try:
+            s = int(selection)
+            return s
+        except:
+            choiceCheck = False
+
+def newTerm(m):
+    termCheck = False
+    term = ''
+    t = 0
+    year = raw_input('Enter year: ')
+    while not termCheck:
+        i = raw_input('Enter 1 for fall, 2 for spring: ')
+        if i.isdigit():
+            t = int(i)
+            if t != 1 and t != 2:
+                print 'Please enter 1 or 2.\n'
+            else:
+                termCheck = True
+        else:
+            print 'Please enter 1 or 2.\n'
+    if t == 1:
+        term = 'fall'
+    else:
+        term = 'spring'
+    term = year + '-' + term
+    m.loadStudentsFromDB(term)
+
+def passwordReset(m):
+    osis = 0
+    while osis == 0:
+        i = raw_input('Enter OSIS: ')
+
+        if len(i) == 9 and i.isdigit():
+            osis = i
+        else:
+            print 'Please enter a valid OSIS\n'
+    m.clearPassword( osis )
+
+
 if __name__ == '__main__':
     print '\n'
-    mydb=studentdb.studentdb()
+    mydb = studentdb()
+    choice = menu()
 
-            
-
+    if choice == 1:
+        newTerm(mydb)
+    elif choice == 2:
+        passwordReset(mydb)
+    else:
+        print 'Please make a valid choice'
